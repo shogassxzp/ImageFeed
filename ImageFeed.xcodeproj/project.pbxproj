@@ -58,11 +58,6 @@
 			path = ImageFeedUITests;
 			sourceTree = "<group>";
 		};
-		1F6130B92DD62FAD0081D0F2 /* Color */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Color;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +88,6 @@
 		1F072D3D2DD61B7B00DE9F2C = {
 			isa = PBXGroup;
 			children = (
-				1F6130B92DD62FAD0081D0F2 /* Color */,
 				1F072D482DD61B7B00DE9F2C /* ImageFeed */,
 				1F072D5F2DD61B7D00DE9F2C /* ImageFeedTests */,
 				1F072D692DD61B7D00DE9F2C /* ImageFeedUITests */,
@@ -128,7 +122,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				1F072D482DD61B7B00DE9F2C /* ImageFeed */,
-				1F6130B92DD62FAD0081D0F2 /* Color */,
 			);
 			name = ImageFeed;
 			packageProductDependencies = (
