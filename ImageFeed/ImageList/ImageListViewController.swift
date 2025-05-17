@@ -11,8 +11,6 @@ class ImageListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("loaded")
-        
         tableView.rowHeight = 200
        
         

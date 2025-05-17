@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -28,7 +29,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="199"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="diV-lr-Ljw" userLabel="ImageView">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="diV-lr-Ljw" userLabel="ImageView">
                                                     <rect key="frame" x="16" y="4" width="382" height="191"/>
                                                     <color key="backgroundColor" name="YP Background"/>
                                                 </imageView>
@@ -41,24 +42,44 @@
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="No Active"/>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-9K-gPz" userLabel="DataLabel">
-                                                    <rect key="frame" x="65" y="134" width="42" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" name="YP White"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EQF-j9-ZUm" userLabel="gradientView">
+                                                    <rect key="frame" x="24" y="171" width="382" height="24"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-9K-gPz" userLabel="DataLabel">
+                                                            <rect key="frame" x="0.0" y="8" width="362" height="16"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                            <color key="textColor" name="YP White"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="UBj-9K-gPz" secondAttribute="bottom" id="Du3-nc-aUH"/>
+                                                        <constraint firstItem="UBj-9K-gPz" firstAttribute="leading" secondItem="EQF-j9-ZUm" secondAttribute="leading" id="bKq-gL-nG4"/>
+                                                        <constraint firstAttribute="height" constant="25" id="uL1-1H-OFJ"/>
+                                                        <constraint firstAttribute="trailing" secondItem="UBj-9K-gPz" secondAttribute="trailing" constant="20" symbolic="YES" id="vdc-Wd-gzf"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                             <color key="backgroundColor" name="YP Black"/>
                                             <constraints>
                                                 <constraint firstItem="NBE-8f-CnP" firstAttribute="top" secondItem="diV-lr-Ljw" secondAttribute="top" id="3DN-Si-2by"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="top" secondItem="ObV-Yi-WOm" secondAttribute="top" constant="171" id="9Ri-VB-VUg"/>
                                                 <constraint firstAttribute="bottom" secondItem="diV-lr-Ljw" secondAttribute="bottom" constant="4" id="YXP-kU-RsQ"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="leading" secondItem="diV-lr-Ljw" secondAttribute="leading" constant="8" id="aTJ-Kz-jUJ"/>
                                                 <constraint firstItem="diV-lr-Ljw" firstAttribute="top" secondItem="ObV-Yi-WOm" secondAttribute="top" constant="4" id="fsJ-T5-RBZ"/>
                                                 <constraint firstAttribute="trailing" secondItem="diV-lr-Ljw" secondAttribute="trailing" constant="16" id="kBj-iI-Sf3"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="diV-lr-Ljw" secondAttribute="trailing" constant="8" id="mNc-FL-sbE"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="bottom" secondItem="diV-lr-Ljw" secondAttribute="bottom" id="pHv-fe-uyS"/>
                                                 <constraint firstItem="NBE-8f-CnP" firstAttribute="trailing" secondItem="diV-lr-Ljw" secondAttribute="trailing" id="vp6-Bt-Dyl"/>
                                                 <constraint firstItem="diV-lr-Ljw" firstAttribute="leading" secondItem="ObV-Yi-WOm" secondAttribute="leading" constant="16" id="wK3-HB-bc1"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="tableDataLabel" destination="UBj-9K-gPz" id="fQN-dz-ljS"/>
+                                            <outlet property="tableImageView" destination="diV-lr-Ljw" id="Xt5-d1-CDr"/>
+                                            <outlet property="tableLikeButton" destination="NBE-8f-CnP" id="xnK-D3-DzB"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -97,5 +118,8 @@
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
