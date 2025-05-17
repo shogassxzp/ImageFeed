@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -31,7 +30,7 @@
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="diV-lr-Ljw" userLabel="ImageView">
                                                     <rect key="frame" x="16" y="4" width="382" height="191"/>
-                                                    <color key="backgroundColor" name="YP Background"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NBE-8f-CnP" userLabel="LikeButton">
                                                     <rect key="frame" x="354" y="4" width="44" height="44"/>
@@ -43,19 +42,19 @@
                                                     <state key="normal" image="No Active"/>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EQF-j9-ZUm" userLabel="gradientView">
-                                                    <rect key="frame" x="24" y="171" width="382" height="24"/>
+                                                    <rect key="frame" x="16" y="171" width="390" height="24"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-9K-gPz" userLabel="DataLabel">
-                                                            <rect key="frame" x="0.0" y="8" width="362" height="16"/>
+                                                            <rect key="frame" x="8" y="0.0" width="362" height="16"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                             <color key="textColor" name="YP White"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="UBj-9K-gPz" secondAttribute="bottom" id="Du3-nc-aUH"/>
-                                                        <constraint firstItem="UBj-9K-gPz" firstAttribute="leading" secondItem="EQF-j9-ZUm" secondAttribute="leading" id="bKq-gL-nG4"/>
+                                                        <constraint firstAttribute="bottom" secondItem="UBj-9K-gPz" secondAttribute="bottom" constant="8" id="Du3-nc-aUH"/>
+                                                        <constraint firstItem="UBj-9K-gPz" firstAttribute="leading" secondItem="EQF-j9-ZUm" secondAttribute="leading" constant="8" id="bKq-gL-nG4"/>
                                                         <constraint firstAttribute="height" constant="25" id="uL1-1H-OFJ"/>
                                                         <constraint firstAttribute="trailing" secondItem="UBj-9K-gPz" secondAttribute="trailing" constant="20" symbolic="YES" id="vdc-Wd-gzf"/>
                                                     </constraints>
@@ -66,7 +65,7 @@
                                                 <constraint firstItem="NBE-8f-CnP" firstAttribute="top" secondItem="diV-lr-Ljw" secondAttribute="top" id="3DN-Si-2by"/>
                                                 <constraint firstItem="EQF-j9-ZUm" firstAttribute="top" secondItem="ObV-Yi-WOm" secondAttribute="top" constant="171" id="9Ri-VB-VUg"/>
                                                 <constraint firstAttribute="bottom" secondItem="diV-lr-Ljw" secondAttribute="bottom" constant="4" id="YXP-kU-RsQ"/>
-                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="leading" secondItem="diV-lr-Ljw" secondAttribute="leading" constant="8" id="aTJ-Kz-jUJ"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="leading" secondItem="diV-lr-Ljw" secondAttribute="leading" id="aTJ-Kz-jUJ"/>
                                                 <constraint firstItem="diV-lr-Ljw" firstAttribute="top" secondItem="ObV-Yi-WOm" secondAttribute="top" constant="4" id="fsJ-T5-RBZ"/>
                                                 <constraint firstAttribute="trailing" secondItem="diV-lr-Ljw" secondAttribute="trailing" constant="16" id="kBj-iI-Sf3"/>
                                                 <constraint firstItem="EQF-j9-ZUm" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="diV-lr-Ljw" secondAttribute="trailing" constant="8" id="mNc-FL-sbE"/>
@@ -76,6 +75,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="gradientView" destination="EQF-j9-ZUm" id="zUN-8K-UM7"/>
                                             <outlet property="tableDataLabel" destination="UBj-9K-gPz" id="fQN-dz-ljS"/>
                                             <outlet property="tableImageView" destination="diV-lr-Ljw" id="Xt5-d1-CDr"/>
                                             <outlet property="tableLikeButton" destination="NBE-8f-CnP" id="xnK-D3-DzB"/>
@@ -118,8 +118,5 @@
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
