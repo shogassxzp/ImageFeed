@@ -7,6 +7,8 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet weak var gradientView: UIView!
     static let reuseIdentifier = "ImagesListCell"
     
+    var onLikeButtonTapped: (() -> Void)?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         setupGradient()
@@ -38,6 +40,7 @@ final class ImagesListCell: UITableViewCell {
         }
     }
     @IBAction func LikeButtonClick(_ sender: Any) {
-        
+        onLikeButtonTapped?()
+           
     }
 }

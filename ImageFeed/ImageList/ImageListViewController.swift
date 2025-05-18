@@ -6,7 +6,7 @@ class ImageListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
     private let photosName: [String] = Array(0..<20).map{"\($0)"}
-    private var photos: [(image: String, date: Date)] = []
+    private var photos: [(image: String, date: Date, isLiked: Bool)] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +16,7 @@ class ImageListViewController: UIViewController {
         
         photos = photosName.enumerated().map { (index, name) in
             let date = Date().addingTimeInterval(-Double(index) * 86400)
-            return (image: name, date: date)
+            return (image: name, date: date, isLiked: false)
         }
     }
     // MARK: Configure cell
@@ -25,14 +25,19 @@ class ImageListViewController: UIViewController {
         guard let image = UIImage(named: photoData.image) else {
             cell.tableImageView.image = UIImage(systemName: "photo")
             cell.tableDataLabel.text = photoData.date.formattedDate()
-            //button
+            
             return
         }
         cell.tableImageView.image = image
         cell.tableDataLabel.text = photoData.date.formattedDate()
-        // button
+        let likeImage = photoData.isLiked ? UIImage( named: "Active") : UIImage(named: "No Active")
+        cell.tableLikeButton.setImage(likeImage, for: .normal)
         
-      
+        cell.onLikeButtonTapped = { [weak self] in
+            guard let self = self else {return}
+            self.photos[indexPath.row].isLiked.toggle()
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
     }
 }
     // MARK: Extensions
