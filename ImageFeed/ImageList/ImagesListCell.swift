@@ -15,23 +15,21 @@ final class ImagesListCell: UITableViewCell {
 
         tableImageView.layer.masksToBounds = true
         tableImageView.layer.cornerRadius = 16
+        gradientView.layer.masksToBounds = true
+        gradientView.layer.cornerRadius = 16
     }
 
     // MARK: Setup gradient
 
-    /*
-     Не догадался сделать в сториборде полупрозрачный вью по этому полез в жёсткие дебри и реализовал градиент кодом.
-     В уроке упоминалась вёрстка кодом в будущем, так что оставлю градиент в таком виде, надеюсь на ревьюер ругать за такое не будет
-     */
     private func setupGradient() {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = gradientView.bounds
         gradientLayer.colors = [
             UIColor.black.withAlphaComponent(0.0).cgColor,
-            UIColor.black.withAlphaComponent(0.8).cgColor,
+            UIColor.black.withAlphaComponent(0.6).cgColor,
         ]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.5)
+        gradientLayer.startPoint = CGPoint(x: 0.8, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.8, y: 1.5)
         gradientView.layer.insertSublayer(gradientLayer, at: 0)
     }
 

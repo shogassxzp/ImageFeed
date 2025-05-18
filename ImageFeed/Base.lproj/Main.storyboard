@@ -45,10 +45,10 @@
                                                     </connections>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EQF-j9-ZUm" userLabel="gradientView">
-                                                    <rect key="frame" x="16" y="171" width="380" height="24"/>
+                                                    <rect key="frame" x="16" y="165" width="380" height="30"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-9K-gPz" userLabel="DataLabel">
-                                                            <rect key="frame" x="8" y="0.0" width="352" height="16"/>
+                                                            <rect key="frame" x="8" y="6" width="352" height="16"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                             <color key="textColor" name="YP White"/>
                                                             <nil key="highlightedColor"/>
@@ -58,7 +58,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="UBj-9K-gPz" secondAttribute="bottom" constant="8" id="Du3-nc-aUH"/>
                                                         <constraint firstItem="UBj-9K-gPz" firstAttribute="leading" secondItem="EQF-j9-ZUm" secondAttribute="leading" constant="8" id="bKq-gL-nG4"/>
-                                                        <constraint firstAttribute="height" constant="25" id="uL1-1H-OFJ"/>
+                                                        <constraint firstAttribute="height" constant="30" id="uL1-1H-OFJ"/>
                                                         <constraint firstAttribute="trailing" secondItem="UBj-9K-gPz" secondAttribute="trailing" constant="20" symbolic="YES" id="vdc-Wd-gzf"/>
                                                     </constraints>
                                                 </view>
@@ -66,12 +66,11 @@
                                             <color key="backgroundColor" name="YP Black"/>
                                             <constraints>
                                                 <constraint firstItem="NBE-8f-CnP" firstAttribute="top" secondItem="diV-lr-Ljw" secondAttribute="top" id="3DN-Si-2by"/>
-                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="top" secondItem="ObV-Yi-WOm" secondAttribute="top" constant="171" id="9Ri-VB-VUg"/>
                                                 <constraint firstAttribute="bottom" secondItem="diV-lr-Ljw" secondAttribute="bottom" constant="4" id="YXP-kU-RsQ"/>
-                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="leading" secondItem="ObV-Yi-WOm" secondAttribute="leading" constant="16" id="aTJ-Kz-jUJ"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="leading" secondItem="diV-lr-Ljw" secondAttribute="leading" id="aTJ-Kz-jUJ"/>
                                                 <constraint firstItem="diV-lr-Ljw" firstAttribute="top" secondItem="ObV-Yi-WOm" secondAttribute="top" constant="4" id="fsJ-T5-RBZ"/>
                                                 <constraint firstAttribute="trailing" secondItem="diV-lr-Ljw" secondAttribute="trailing" constant="16" id="kBj-iI-Sf3"/>
-                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="trailing" secondItem="ObV-Yi-WOm" secondAttribute="trailing" constant="-16" id="mNc-FL-sbE"/>
+                                                <constraint firstItem="EQF-j9-ZUm" firstAttribute="trailing" secondItem="diV-lr-Ljw" secondAttribute="trailing" id="mNc-FL-sbE"/>
                                                 <constraint firstItem="EQF-j9-ZUm" firstAttribute="bottom" secondItem="diV-lr-Ljw" secondAttribute="bottom" id="pHv-fe-uyS"/>
                                                 <constraint firstItem="NBE-8f-CnP" firstAttribute="trailing" secondItem="diV-lr-Ljw" secondAttribute="trailing" id="vp6-Bt-Dyl"/>
                                                 <constraint firstItem="diV-lr-Ljw" firstAttribute="leading" secondItem="ObV-Yi-WOm" secondAttribute="leading" constant="16" id="wK3-HB-bc1"/>

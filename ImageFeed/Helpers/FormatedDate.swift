@@ -10,7 +10,3 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-//   How to use formated date
-//   let currentDate = Date()
-//   let formatted = currentDate.formattedDate()
-//   print(formatted)

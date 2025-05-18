@@ -2,7 +2,7 @@ import UIKit
 
 // MARK: Controller
 
-class ImageListViewController: UIViewController {
+final class ImageListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
 
     private let photosName: [String] = Array(0 ..< 20).map { "\($0)" }
@@ -14,7 +14,7 @@ class ImageListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
 
         photos = photosName.enumerated().map { index, name in
-            let date = Date().addingTimeInterval(-Double(index) * 86400)
+            let date = Date()
             return (image: name, date: date, isLiked: false)
         }
     }
@@ -34,8 +34,12 @@ class ImageListViewController: UIViewController {
         cell.tableImageView.image = image
         cell.tableDataLabel.text = photoData.date.formattedDate()
         let likeImage = photoData.isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+        let isLiked = indexPath.row % 2 == 0
+        let countedLike = isLiked ? UIImage(named: "No Active") : UIImage(named: "Active")
+    
         cell.tableLikeButton.setImage(likeImage, for: .normal)
-
+        cell.tableLikeButton.setImage(countedLike, for: .normal)
+        
         cell.onLikeButtonTapped = { [weak self] in // Clouser from ListCell for change LikeButton and update cell
             guard let self = self else { return }
             self.photos[indexPath.row].isLiked.toggle()
@@ -77,10 +81,15 @@ extension ImageListViewController: UITableViewDelegate {
         }
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+        guard imageViewWidth > 0 else {
+            return 16 + 30
+        }
         let imageWidth = image.size.width
+        guard imageWidth != 0 else {
+            return 16 + 30
+        }
         let scale = imageViewWidth / imageWidth
         let cellHigh = image.size.height * scale + imageInsets.top + imageInsets.bottom
-
         return cellHigh
     }
 }
