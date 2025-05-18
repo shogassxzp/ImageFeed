@@ -1,4 +1,4 @@
-//  Date extension for fututre
+//  Date extension from previous project with mod. Using in configCell
 
 import Foundation
 
@@ -10,7 +10,7 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-//   How to extract formated date
+//   How to use formated date
 //   let currentDate = Date()
 //   let formatted = currentDate.formattedDate()
 //   print(formatted)
