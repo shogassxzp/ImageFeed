@@ -18,7 +18,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="TWs-Mc-seG">
-                                <rect key="frame" x="182.66666666666666" y="467" width="74.999999999999972" height="78"/>
+                                <rect key="frame" x="184" y="469" width="72" height="74"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="72" id="hdx-yX-K8b"/>
+                                    <constraint firstAttribute="height" constant="74" id="oOa-PB-pEO"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -35,7 +39,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Vector" width="75" height="78"/>
+        <image name="Vector" width="25" height="26"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
