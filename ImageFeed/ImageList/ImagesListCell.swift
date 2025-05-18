@@ -10,6 +10,10 @@ final class ImagesListCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupGradient()
+        
+        tableImageView.layer.masksToBounds = true
+        tableImageView.layer.cornerRadius = 16
+        
     }
         // MARK: Setup gradient
         /*
@@ -32,5 +36,8 @@ final class ImagesListCell: UITableViewCell {
         if let gradientLayer = gradientView.layer.sublayers?.first as? CAGradientLayer {
             gradientLayer.frame = gradientView.bounds
         }
+    }
+    @IBAction func LikeButtonClick(_ sender: Any) {
+        
     }
 }
