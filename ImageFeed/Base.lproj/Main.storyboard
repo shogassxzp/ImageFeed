@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tqk-Am-gc4">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -115,14 +115,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD6-Dj-COQ" userLabel="LogoutButton">
+                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD6-Dj-COQ" userLabel="LogoutButton">
                                 <rect key="frame" x="333" y="159" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="cYl-EG-TBN"/>
                                     <constraint firstAttribute="height" constant="44" id="keD-Gz-w1z"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="Logout"/>
+                                <state key="normal" image="Logout">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
+                                </state>
+                                <connections>
+                                    <action selector="LogoutPressed:" destination="tqk-Am-gc4" eventType="touchUpInside" id="TA5-mv-fyZ"/>
+                                </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ufl-Ke-0Mq">
                                 <rect key="frame" x="16" y="146" width="317" height="153"/>
@@ -158,13 +163,19 @@
                         <viewLayoutGuide key="safeArea" id="ZGC-cR-GJ8"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="CD6-Dj-COQ" firstAttribute="centerY" secondItem="i57-eG-cJL" secondAttribute="centerY" id="93U-h4-jjS"/>
+                            <constraint firstItem="CD6-Dj-COQ" firstAttribute="centerY" secondItem="i57-eG-cJL" secondAttribute="centerY" id="EgP-qf-Ife"/>
                             <constraint firstItem="ufl-Ke-0Mq" firstAttribute="top" secondItem="ZGC-cR-GJ8" secondAttribute="top" constant="28" id="RQK-T7-VKU"/>
                             <constraint firstItem="ufl-Ke-0Mq" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="CD6-Dj-COQ" secondAttribute="leading" id="Znz-70-fjE"/>
                             <constraint firstItem="ufl-Ke-0Mq" firstAttribute="leading" secondItem="ZGC-cR-GJ8" secondAttribute="leading" constant="16" id="hme-sr-mbG"/>
                             <constraint firstItem="ZGC-cR-GJ8" firstAttribute="trailing" secondItem="CD6-Dj-COQ" secondAttribute="trailing" constant="16" id="nrA-5J-iz7"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="BioLabel" destination="jwj-ks-UWp" id="PSw-m1-91G"/>
+                        <outlet property="LogoutButton" destination="CD6-Dj-COQ" id="eh3-6b-aWG"/>
+                        <outlet property="UserNameLabel" destination="lzN-XA-kIg" id="WjR-KJ-Xho"/>
+                        <outlet property="UserPhotoImageVIew" destination="i57-eG-cJL" id="gFF-it-1VS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3T2-cc-lOX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -172,7 +183,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Logout" width="14.666666984558105" height="14.666666984558105"/>
+        <image name="Logout" width="44" height="44"/>
         <image name="No Active" width="44" height="44"/>
         <image name="Stub" width="70" height="70"/>
         <namedColor name="YP Background">
