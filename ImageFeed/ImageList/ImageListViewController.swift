@@ -82,7 +82,7 @@ extension ImageListViewController: UITableViewDelegate {
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
         guard imageViewWidth > 0 else {
-            return 16 + 30
+            return 16 + 30 // Отступ + Высота gradientView
         }
         let imageWidth = image.size.width
         guard imageWidth != 0 else {
