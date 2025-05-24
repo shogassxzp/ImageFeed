@@ -215,10 +215,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1s-gs-8hy">
-                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2nZ-7q-vx0">
-                                        <rect key="frame" x="61" y="209" width="316" height="397"/>
+                                        <rect key="frame" x="49" y="250" width="316" height="397"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -264,7 +264,7 @@
                         <constraints>
                             <constraint firstItem="HEQ-It-gK6" firstAttribute="leading" secondItem="qs9-SC-sOQ" secondAttribute="leading" id="HEP-Dc-Fwc"/>
                             <constraint firstItem="D1s-gs-8hy" firstAttribute="bottom" secondItem="qs9-SC-sOQ" secondAttribute="bottom" id="NY7-Jk-VBC"/>
-                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="top" secondItem="D1s-gs-8hy" secondAttribute="top" id="TNC-fn-CSk"/>
+                            <constraint firstAttribute="top" secondItem="D1s-gs-8hy" secondAttribute="top" id="TNC-fn-CSk"/>
                             <constraint firstItem="qs9-SC-sOQ" firstAttribute="bottom" secondItem="ciV-Ai-zPO" secondAttribute="bottom" constant="30" id="VrD-58-tuX"/>
                             <constraint firstItem="qs9-SC-sOQ" firstAttribute="leading" secondItem="D1s-gs-8hy" secondAttribute="leading" id="cKX-5f-dfq"/>
                             <constraint firstItem="ciV-Ai-zPO" firstAttribute="centerX" secondItem="qs9-SC-sOQ" secondAttribute="centerX" id="d1D-9O-c48"/>
