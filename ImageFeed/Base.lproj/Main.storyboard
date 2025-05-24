@@ -214,45 +214,53 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="2nZ-7q-vx0">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEQ-It-gK6" userLabel="BackwardButton">
-                                <rect key="frame" x="0.0" y="61" width="130" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="130" id="P0h-0s-Oys"/>
-                                    <constraint firstAttribute="height" constant="42" id="xNL-7A-Hg4"/>
-                                </constraints>
-                                <inset key="contentEdgeInsets" minX="-75" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="" image="Backward"/>
-                                <connections>
-                                    <action selector="BackButtonTap:" destination="mwM-2b-EQE" eventType="touchUpInside" id="eLz-th-ode"/>
-                                </connections>
-                            </button>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1s-gs-8hy">
+                                <rect key="frame" x="-20" y="-20" width="433" height="892"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2nZ-7q-vx0">
+                                        <rect key="frame" x="20" y="20" width="1600" height="1059"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEQ-It-gK6" userLabel="BackwardButton">
+                                        <rect key="frame" x="0.0" y="-2" width="130" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="P0h-0s-Oys"/>
+                                            <constraint firstAttribute="height" constant="42" id="xNL-7A-Hg4"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="-75" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="" image="Backward"/>
+                                        <connections>
+                                            <action selector="BackButtonTap:" destination="mwM-2b-EQE" eventType="touchUpInside" id="eLz-th-ode"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <viewLayoutGuide key="contentLayoutGuide" id="fMy-jb-AZ6"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="WQv-9c-pQs"/>
+                            </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="qs9-SC-sOQ"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="2nZ-7q-vx0" firstAttribute="leading" secondItem="WVh-DU-pZW" secondAttribute="leading" id="7nW-jv-eiq"/>
-                            <constraint firstItem="HEQ-It-gK6" firstAttribute="leading" secondItem="qs9-SC-sOQ" secondAttribute="leading" id="IOa-WG-wQ2"/>
-                            <constraint firstAttribute="trailing" secondItem="2nZ-7q-vx0" secondAttribute="trailing" id="Yip-BT-Wiv"/>
-                            <constraint firstItem="2nZ-7q-vx0" firstAttribute="top" secondItem="WVh-DU-pZW" secondAttribute="top" id="eHV-IH-xJ1"/>
-                            <constraint firstItem="HEQ-It-gK6" firstAttribute="top" secondItem="qs9-SC-sOQ" secondAttribute="top" constant="2" id="fb9-Nk-oeS"/>
-                            <constraint firstAttribute="bottom" secondItem="2nZ-7q-vx0" secondAttribute="bottom" id="uSp-io-TcM"/>
+                            <constraint firstItem="D1s-gs-8hy" firstAttribute="bottom" secondItem="qs9-SC-sOQ" secondAttribute="bottom" id="NY7-Jk-VBC"/>
+                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="top" secondItem="D1s-gs-8hy" secondAttribute="top" id="TNC-fn-CSk"/>
+                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="leading" secondItem="D1s-gs-8hy" secondAttribute="leading" id="cKX-5f-dfq"/>
+                            <constraint firstItem="D1s-gs-8hy" firstAttribute="trailing" secondItem="qs9-SC-sOQ" secondAttribute="trailing" id="nB2-Ds-k2e"/>
+                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="leading" secondItem="HEQ-It-gK6" secondAttribute="leading" id="wAN-R0-3lV"/>
+                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="top" secondItem="HEQ-It-gK6" secondAttribute="top" constant="2" id="wSK-FA-bcB"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="SingleImageView" destination="2nZ-7q-vx0" id="DwF-di-6GQ"/>
+                        <outlet property="scrollView" destination="D1s-gs-8hy" id="oNR-wF-hsj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zgv-1P-quX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="170" y="361"/>
+            <point key="canvasLocation" x="138" y="361"/>
         </scene>
     </scenes>
     <resources>
-        <image name="0" width="1600" height="1059"/>
         <image name="Backward" width="24" height="24"/>
         <image name="Logout" width="44" height="44"/>
         <image name="MainNoActive" width="30" height="30"/>
