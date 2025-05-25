@@ -19,7 +19,8 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         SingleImageView.image = image
-        
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
         if let image = image {
             rescaleAndCenterImageInScrollView(image: image)
         }
@@ -55,9 +56,9 @@ final class SingleImageViewController: UIViewController {
         let maxZoomScale = scrollView.maximumZoomScale
         
         //Вычисляем масштаб
-        let widthScale = visibleRectSize.width / imageSize.width
-        let heightScale = visibleRectSize.height / imageSize.height
-        let scale = min(maxZoomScale, max(minZoomScale, min(widthScale, heightScale)))
+        let hScale = visibleRectSize.width / imageSize.width
+        let vScale = visibleRectSize.height / imageSize.height
+        let scale = max(minZoomScale, min(maxZoomScale, max(hScale, vScale)))
         
         //Устанавливаем масштаб
         scrollView.setZoomScale(scale, animated: false)
@@ -67,7 +68,7 @@ final class SingleImageViewController: UIViewController {
         
         let newContenSize = scrollView.contentSize
 
-        let horizontalInset = max(0, (visibleRectSize.width - newContenSize.width) / 2)
+        let horizontalInset = min(0, (visibleRectSize.width - newContenSize.width) / 2)
         let verticalInset = max(0, ((visibleRectSize.height - 0) - newContenSize.height) / 2)
         //Устанавливаем изображение по середине
         scrollView.contentInset = UIEdgeInsets(
