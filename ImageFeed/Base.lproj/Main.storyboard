@@ -118,69 +118,9 @@
                     <view key="view" contentMode="scaleToFill" id="Yb5-1S-9FP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="779"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CD6-Dj-COQ" userLabel="LogoutButton">
-                                <rect key="frame" x="354" y="137" width="44" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="cYl-EG-TBN"/>
-                                    <constraint firstAttribute="height" constant="44" id="keD-Gz-w1z"/>
-                                </constraints>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="Logout">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
-                                </state>
-                                <connections>
-                                    <action selector="LogoutPressed:" destination="tqk-Am-gc4" eventType="touchUpInside" id="TA5-mv-fyZ"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ufl-Ke-0Mq">
-                                <rect key="frame" x="16" y="124" width="338" height="153.5"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Stub" translatesAutoresizingMaskIntoConstraints="NO" id="i57-eG-cJL" userLabel="ProfilePhoto">
-                                        <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="QU8-Mb-TBO"/>
-                                            <constraint firstAttribute="width" constant="70" id="n4f-w7-0FZ"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UserName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lzN-XA-kIg">
-                                        <rect key="frame" x="0.0" y="78" width="113" height="27.5"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                        <color key="textColor" name="YP White"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UserNameTag" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cgf-1m-9dl">
-                                        <rect key="frame" x="0.0" y="113.5" width="84.5" height="16"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" name="YP Gray"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwj-ks-UWp">
-                                        <rect key="frame" x="0.0" y="137.5" width="19.5" height="16"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" name="YP White"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="ZGC-cR-GJ8"/>
-                        <color key="backgroundColor" name="YP Black"/>
-                        <constraints>
-                            <constraint firstItem="CD6-Dj-COQ" firstAttribute="centerY" secondItem="i57-eG-cJL" secondAttribute="centerY" id="EgP-qf-Ife"/>
-                            <constraint firstItem="ufl-Ke-0Mq" firstAttribute="top" secondItem="ZGC-cR-GJ8" secondAttribute="top" constant="28" id="RQK-T7-VKU"/>
-                            <constraint firstItem="ufl-Ke-0Mq" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="CD6-Dj-COQ" secondAttribute="leading" id="Znz-70-fjE"/>
-                            <constraint firstItem="ufl-Ke-0Mq" firstAttribute="leading" secondItem="ZGC-cR-GJ8" secondAttribute="leading" constant="16" id="hme-sr-mbG"/>
-                            <constraint firstItem="ZGC-cR-GJ8" firstAttribute="trailing" secondItem="CD6-Dj-COQ" secondAttribute="trailing" constant="16" id="nrA-5J-iz7"/>
-                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="ProfileNoActive" id="tBi-wB-6J5"/>
-                    <connections>
-                        <outlet property="BioLabel" destination="jwj-ks-UWp" id="PSw-m1-91G"/>
-                        <outlet property="LogoutButton" destination="CD6-Dj-COQ" id="eh3-6b-aWG"/>
-                        <outlet property="UserNameLabel" destination="lzN-XA-kIg" id="WjR-KJ-Xho"/>
-                        <outlet property="UserPhotoImageVIew" destination="i57-eG-cJL" id="gFF-it-1VS"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3T2-cc-lOX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -214,18 +154,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D1s-gs-8hy">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D1s-gs-8hy">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2nZ-7q-vx0">
-                                        <rect key="frame" x="49" y="250" width="316" height="397"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2nZ-7q-vx0">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="414" id="kro-bB-kB3"/>
+                                            <constraint firstAttribute="height" constant="896" id="ngB-iZ-SoM"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="leading" secondItem="fMy-jb-AZ6" secondAttribute="leading" id="5Ni-If-Csr"/>
-                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="bottom" secondItem="fMy-jb-AZ6" secondAttribute="bottom" id="RF0-fo-S8a"/>
-                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="top" secondItem="fMy-jb-AZ6" secondAttribute="top" id="mdf-ao-9fg"/>
-                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="trailing" secondItem="fMy-jb-AZ6" secondAttribute="trailing" id="mwM-pO-FK8"/>
+                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="top" secondItem="fMy-jb-AZ6" secondAttribute="top" id="6FB-Vs-C7n"/>
+                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="leading" secondItem="fMy-jb-AZ6" secondAttribute="leading" id="Plf-dA-wfP"/>
+                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="bottom" secondItem="fMy-jb-AZ6" secondAttribute="bottom" id="bku-qU-zZn"/>
+                                    <constraint firstItem="2nZ-7q-vx0" firstAttribute="trailing" secondItem="fMy-jb-AZ6" secondAttribute="trailing" id="f7W-TI-gif"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="fMy-jb-AZ6"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="WQv-9c-pQs"/>
@@ -262,18 +206,20 @@
                         <viewLayoutGuide key="safeArea" id="qs9-SC-sOQ"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="trailing" secondItem="D1s-gs-8hy" secondAttribute="trailing" id="5G7-4s-caB"/>
+                            <constraint firstItem="D1s-gs-8hy" firstAttribute="leading" secondItem="qs9-SC-sOQ" secondAttribute="leading" id="F0Y-7g-gHY"/>
                             <constraint firstItem="HEQ-It-gK6" firstAttribute="leading" secondItem="qs9-SC-sOQ" secondAttribute="leading" id="HEP-Dc-Fwc"/>
-                            <constraint firstItem="D1s-gs-8hy" firstAttribute="bottom" secondItem="WVh-DU-pZW" secondAttribute="bottom" id="NY7-Jk-VBC"/>
-                            <constraint firstAttribute="top" secondItem="D1s-gs-8hy" secondAttribute="top" id="TNC-fn-CSk"/>
+                            <constraint firstAttribute="top" secondItem="D1s-gs-8hy" secondAttribute="top" id="LKd-TW-El1"/>
                             <constraint firstItem="qs9-SC-sOQ" firstAttribute="bottom" secondItem="ciV-Ai-zPO" secondAttribute="bottom" constant="30" id="VrD-58-tuX"/>
-                            <constraint firstItem="qs9-SC-sOQ" firstAttribute="leading" secondItem="D1s-gs-8hy" secondAttribute="leading" id="cKX-5f-dfq"/>
                             <constraint firstItem="ciV-Ai-zPO" firstAttribute="centerX" secondItem="qs9-SC-sOQ" secondAttribute="centerX" id="d1D-9O-c48"/>
-                            <constraint firstItem="D1s-gs-8hy" firstAttribute="trailing" secondItem="qs9-SC-sOQ" secondAttribute="trailing" id="nB2-Ds-k2e"/>
+                            <constraint firstItem="D1s-gs-8hy" firstAttribute="bottom" secondItem="WVh-DU-pZW" secondAttribute="bottom" id="mfp-km-uxb"/>
                             <constraint firstItem="HEQ-It-gK6" firstAttribute="top" secondItem="qs9-SC-sOQ" secondAttribute="top" constant="2" id="sIL-NT-Jif"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="SingleImageView" destination="2nZ-7q-vx0" id="DwF-di-6GQ"/>
+                        <outlet property="imageHeight" destination="ngB-iZ-SoM" id="dbp-G2-tU4"/>
+                        <outlet property="imageWidth" destination="kro-bB-kB3" id="0UY-eQ-7n1"/>
                         <outlet property="scrollView" destination="D1s-gs-8hy" id="oNR-wF-hsj"/>
                     </connections>
                 </viewController>
@@ -284,20 +230,15 @@
     </scenes>
     <resources>
         <image name="Backward" width="24" height="24"/>
-        <image name="Logout" width="44" height="44"/>
         <image name="MainNoActive" width="30" height="30"/>
         <image name="No Active" width="44" height="44"/>
         <image name="ProfileNoActive" width="30" height="30"/>
         <image name="Sharing" width="50" height="50"/>
-        <image name="Stub" width="70" height="70"/>
         <namedColor name="YP Background">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="YP Gray">
-            <color red="0.68235294117647061" green="0.68627450980392157" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
