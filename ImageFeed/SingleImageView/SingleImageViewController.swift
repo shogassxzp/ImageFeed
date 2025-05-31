@@ -18,17 +18,21 @@ final class SingleImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
+        setupScroll()
         SingleImageView.image = image
         // Изменение констант размера, чтобы всё считалось правильно
         imageWidth.constant = SingleImageView.image?.size.width ?? 0
         imageHeight.constant = SingleImageView.image?.size.height ?? 0
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.showsHorizontalScrollIndicator = false
         if let image = image {
             rescaleAndCenterImageInScrollView(image: image)
         }
+    }
+    
+    func setupScroll() {
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
     }
 
     // MARK: Buttons actions
@@ -51,44 +55,41 @@ final class SingleImageViewController: UIViewController {
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         view.layoutIfNeeded()
 
-        // Размеры экрана и фотки
-        let visibleRectSize = scrollView.bounds.size
-        let imageSize = image.size
+    // Размеры экрана и фотки
+    let visibleRectSize = scrollView.bounds.size
+    let imageSize = image.size
 
-        // Минимальный и максимальный масштаб
-        let minZoomScale = scrollView.minimumZoomScale
-        let maxZoomScale = scrollView.maximumZoomScale
+    // Минимальный и максимальный масштаб
+    let minZoomScale = scrollView.minimumZoomScale
+    let maxZoomScale = scrollView.maximumZoomScale
         
-        // Вычисляем масштаб
-        let hScale = visibleRectSize.width / imageSize.width
-        let vScale = visibleRectSize.height / imageSize.height
-        let scale = max(minZoomScale, min(maxZoomScale, max(hScale, vScale)))
+    // Вычисляем масштаб
+    let hScale = visibleRectSize.width / imageSize.width
+    let vScale = visibleRectSize.height / imageSize.height
+    let scale = max(minZoomScale, min(maxZoomScale, max(hScale, vScale)))
 
-        // Устанавливаем масштаб
-        scrollView.setZoomScale(scale, animated: false)
+    // Устанавливаем масштаб
+    scrollView.setZoomScale(scale, animated: false)
 
-        // Убеждаемся, что layout обновился после изменения масштаба
-        scrollView.layoutIfNeeded()
+    // Убеждаемся, что layout обновился после изменения масштаба
+    scrollView.layoutIfNeeded()
 
-        let newContentSize = scrollView.contentSize
+    let newContentSize = scrollView.contentSize
 
-        let horizontalInset = max(0, (newContentSize.width) / 2)
-        let verticalInset = max(0, (newContentSize.height) / 2)
-        // Добавляем inset
-        scrollView.contentInset = UIEdgeInsets(
-            top: verticalInset,
-            left: horizontalInset,
-            bottom: verticalInset,
-            right: horizontalInset
-        )
-        
-        // Высчитываем центр
-        let xOffset = max(0, (newContentSize.width - visibleRectSize.width) / 2)
-        let yOffset = max(0, (newContentSize.height - visibleRectSize.height) / 2)
-        // Устанавливаем центр
+    let horizontalInset = max(0, (newContentSize.width) / 2)
+    let verticalInset = max(0, (newContentSize.height) / 2)
+    // Добавляем inset
+    scrollView.contentInset = UIEdgeInsets(
+        top: verticalInset,
+        left: horizontalInset,
+        bottom: verticalInset,
+        right: horizontalInset
+    )
+    // Высчитываем центр
+    let xOffset = max(0, (newContentSize.width - visibleRectSize.width) / 2)
+    let yOffset = max(0, (newContentSize.height - visibleRectSize.height) / 2)
+    // Устанавливаем центр
         scrollView.contentOffset = CGPoint(x: xOffset, y: yOffset)
-        
-        
     }
 }
 
