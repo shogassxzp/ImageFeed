@@ -72,8 +72,8 @@ final class SingleImageViewController: UIViewController {
 
         let newContentSize = scrollView.contentSize
 
-        let horizontalInset = max(0, (visibleRectSize.width - newContentSize.width) / 2)
-        let verticalInset = max(0, (visibleRectSize.height - newContentSize.height) / 2)
+        let horizontalInset = max(0, (newContentSize.width) / 2)
+        let verticalInset = max(0, (newContentSize.height) / 2)
         // Добавляем inset
         scrollView.contentInset = UIEdgeInsets(
             top: verticalInset,
@@ -87,6 +87,7 @@ final class SingleImageViewController: UIViewController {
         let yOffset = max(0, (newContentSize.height - visibleRectSize.height) / 2)
         // Устанавливаем центр
         scrollView.contentOffset = CGPoint(x: xOffset, y: yOffset)
+        
         
     }
 }
