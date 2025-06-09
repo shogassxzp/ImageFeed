@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="18K-Ut-CKN">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Tno-n8-4K4">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -109,7 +110,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-706" y="361"/>
+            <point key="canvasLocation" x="-162" y="368"/>
         </scene>
         <!--ProfileController-->
         <scene sceneID="5Wk-Pf-m2T">
@@ -124,7 +125,53 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3T2-cc-lOX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-706" y="-335"/>
+            <point key="canvasLocation" x="-162" y="-365"/>
+        </scene>
+        <!--AuthViewController-->
+        <scene sceneID="Uns-qe-Gb4">
+            <objects>
+                <viewController id="Tno-n8-4K4" userLabel="AuthViewController" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ASZ-S7-ISl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo_of_Unsplash" translatesAutoresizingMaskIntoConstraints="NO" id="31G-Cf-rKS" userLabel="ImageView">
+                                <rect key="frame" x="177" y="432" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="Eb6-vb-hnD"/>
+                                    <constraint firstAttribute="width" constant="60" id="ExH-dU-Kb7"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ym6-SV-EZ9">
+                                <rect key="frame" x="16" y="690" width="382" height="48"/>
+                                <color key="backgroundColor" name="YP White"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="K7x-oq-aGJ"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Войти">
+                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="17"/>
+                                    <color key="baseForegroundColor" name="YP Black"/>
+                                </buttonConfiguration>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="P1K-vg-50P"/>
+                        <color key="backgroundColor" name="YP Black"/>
+                        <constraints>
+                            <constraint firstItem="P1K-vg-50P" firstAttribute="bottom" secondItem="ym6-SV-EZ9" secondAttribute="bottom" constant="90" id="2ms-Ll-EC2"/>
+                            <constraint firstItem="ym6-SV-EZ9" firstAttribute="leading" secondItem="P1K-vg-50P" secondAttribute="leading" constant="16" id="BYC-P0-FSe"/>
+                            <constraint firstItem="31G-Cf-rKS" firstAttribute="centerX" secondItem="P1K-vg-50P" secondAttribute="centerX" id="WmV-lS-HWM"/>
+                            <constraint firstItem="31G-Cf-rKS" firstAttribute="centerY" secondItem="P1K-vg-50P" secondAttribute="centerY" id="k1a-qD-h1W"/>
+                            <constraint firstItem="P1K-vg-50P" firstAttribute="trailing" secondItem="ym6-SV-EZ9" secondAttribute="trailing" constant="16" id="z2c-7H-CM0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loginButton" destination="ym6-SV-EZ9" id="pOB-iI-R7I"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z4H-1c-gxV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3978" y="-133"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Mwa-91-IOY">
@@ -225,11 +272,27 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zgv-1P-quX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="360.9375"/>
+            <point key="canvasLocation" x="683" y="368"/>
+        </scene>
+        <!--Web View View Controller-->
+        <scene sceneID="ZeX-by-ZpV">
+            <objects>
+                <viewController id="cwA-Yl-Eji" customClass="WebViewViewController" customModule="ImageFeed" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="c3L-Oa-1wX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="Ykh-EV-iAy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bSE-ha-nfc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3101" y="-133"/>
         </scene>
     </scenes>
     <resources>
         <image name="Backward" width="24" height="24"/>
+        <image name="Logo_of_Unsplash" width="30" height="30"/>
         <image name="MainNoActive" width="30" height="30"/>
         <image name="No Active" width="44" height="44"/>
         <image name="ProfileNoActive" width="30" height="30"/>
@@ -243,5 +306,8 @@
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
