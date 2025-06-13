@@ -2,11 +2,10 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4H-RU-LjJ">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment version="5888" identifier="iOS"/>
+        <deployment version="5376" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -154,7 +153,7 @@
                                     <color key="baseForegroundColor" name="YP Black"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="VuM-bZ-sJ1" kind="show" identifier="ShowWebView" id="Tj4-c7-GZg"/>
+                                    <segue destination="B31-8k-hnJ" kind="show" identifier="showWebView" id="Ye7-PQ-kHx"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -178,34 +177,39 @@
             <point key="canvasLocation" x="-3068.115942028986" y="-133.25892857142856"/>
         </scene>
         <!--Web View View Controller-->
-        <scene sceneID="Zro-nn-UCZ">
+        <scene sceneID="lNI-R4-eFw">
             <objects>
-                <viewController id="VuM-bZ-sJ1" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="OpJ-MO-hIf">
+                <viewController id="B31-8k-hnJ" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FzN-M7-uoW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9w3-dd-cSX">
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eTb-GO-NwG">
                                 <rect key="frame" x="0.0" y="162" width="393" height="690"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="Sbl-Q5-vRX"/>
+                        <viewLayoutGuide key="safeArea" id="6a8-rb-QRC"/>
                         <color key="backgroundColor" name="YP White"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="eTb-GO-NwG" secondAttribute="trailing" id="9rM-nb-kTQ"/>
+                            <constraint firstAttribute="bottom" secondItem="eTb-GO-NwG" secondAttribute="bottom" id="Bz2-ow-9j5"/>
+                            <constraint firstItem="eTb-GO-NwG" firstAttribute="top" secondItem="6a8-rb-QRC" secondAttribute="top" id="E8f-Eq-ju7"/>
+                            <constraint firstItem="eTb-GO-NwG" firstAttribute="leading" secondItem="FzN-M7-uoW" secondAttribute="leading" id="bBJ-xR-9Qb"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="8Wf-6j-d2y"/>
+                    <navigationItem key="navigationItem" id="xE6-r8-uQ4"/>
                     <connections>
-                        <outlet property="webView" destination="9w3-dd-cSX" id="bJG-Wu-zCu"/>
+                        <outlet property="webView" destination="FzN-M7-uoW" id="ZDT-UV-gE4"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jjx-iE-bZf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XSZ-hN-wGH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2220" y="-131"/>
+            <point key="canvasLocation" x="-2021" y="-134"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Mwa-91-IOY">
@@ -343,8 +347,5 @@
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
