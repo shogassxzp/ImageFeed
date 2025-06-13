@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1FA0AF682DFCA2D300EFB101 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0AF672DFCA2D300EFB101 /* Constants.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		1F072D462DD61B7B00DE9F2C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA0AF672DFCA2D300EFB101 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -45,6 +50,7 @@
 		1F072D3D2DD61B7B00DE9F2C = {
 			isa = PBXGroup;
 			children = (
+				1FA0AF672DFCA2D300EFB101 /* Constants.swift */,
 				1F072D482DD61B7B00DE9F2C /* ImageFeed */,
 				1F072D472DD61B7B00DE9F2C /* Products */,
 				1FAD81862DF73BA40028D6A6 /* Auth */,
@@ -140,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FA0AF682DFCA2D300EFB101 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
