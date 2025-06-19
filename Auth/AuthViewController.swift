@@ -1,6 +1,6 @@
 import UIKit
 
-final class AuthViewController: UIViewController {
+final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     
     private let ShowWebViewSegueIdentifier = "ShowWebView"
 
@@ -19,6 +19,21 @@ final class AuthViewController: UIViewController {
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "Backward")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: .none)
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == ShowWebViewSegueIdentifier,
+        let webViewController = segue.destination as? WebViewViewController {
+            webViewController.delegate = self
+        }
+    }
+    
+    func webViewViewController(_ vc: WebViewViewController, didAuthentcateWithCode code: String) {
+        
+    }
+    
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        navigationController?.popViewController(animated: true)
     }
     
 }

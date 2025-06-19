@@ -7,13 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1FA0AF682DFCA2D300EFB101 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0AF672DFCA2D300EFB101 /* Constants.swift */; };
+		1FA0AF582DFC936D00EFB101 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0AF4E2DFC936D00EFB101 /* AuthViewController.swift */; };
+		1FA0AF652DFC93EA00EFB101 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0AF642DFC93EA00EFB101 /* WebViewViewController.swift */; };
 		1FA0AF6C2DFCAAC400EFB101 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA0AF6A2DFCAAC000EFB101 /* WebKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1F072D462DD61B7B00DE9F2C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FA0AF672DFCA2D300EFB101 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		1FA0AF4E2DFC936D00EFB101 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		1FA0AF642DFC93EA00EFB101 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		1FA0AF6A2DFCAAC000EFB101 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -53,7 +55,6 @@
 		1F072D3D2DD61B7B00DE9F2C = {
 			isa = PBXGroup;
 			children = (
-				1FA0AF672DFCA2D300EFB101 /* Constants.swift */,
 				1F072D482DD61B7B00DE9F2C /* ImageFeed */,
 				1F072D472DD61B7B00DE9F2C /* Products */,
 				1FAD81862DF73BA40028D6A6 /* Auth */,
@@ -80,6 +81,8 @@
 		1FAD81862DF73BA40028D6A6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				1FA0AF4E2DFC936D00EFB101 /* AuthViewController.swift */,
+				1FA0AF642DFC93EA00EFB101 /* WebViewViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -158,7 +161,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FA0AF682DFCA2D300EFB101 /* Constants.swift in Sources */,
+				1FA0AF652DFC93EA00EFB101 /* WebViewViewController.swift in Sources */,
+				1FA0AF582DFC936D00EFB101 /* AuthViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

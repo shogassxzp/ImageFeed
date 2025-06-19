@@ -187,23 +187,31 @@
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eTb-GO-NwG">
                                 <rect key="frame" x="0.0" y="162" width="393" height="690"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <color key="tintColor" name="YP Black"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Jj0-V0-4P1">
+                                <rect key="frame" x="0.0" y="162" width="393" height="4"/>
+                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6a8-rb-QRC"/>
                         <color key="backgroundColor" name="YP White"/>
                         <constraints>
+                            <constraint firstItem="Jj0-V0-4P1" firstAttribute="leading" secondItem="6a8-rb-QRC" secondAttribute="leading" id="0sh-WH-2af"/>
                             <constraint firstAttribute="trailing" secondItem="eTb-GO-NwG" secondAttribute="trailing" id="9rM-nb-kTQ"/>
                             <constraint firstAttribute="bottom" secondItem="eTb-GO-NwG" secondAttribute="bottom" id="Bz2-ow-9j5"/>
                             <constraint firstItem="eTb-GO-NwG" firstAttribute="top" secondItem="6a8-rb-QRC" secondAttribute="top" id="E8f-Eq-ju7"/>
+                            <constraint firstItem="Jj0-V0-4P1" firstAttribute="top" secondItem="6a8-rb-QRC" secondAttribute="top" id="U6m-T3-oIg"/>
                             <constraint firstItem="eTb-GO-NwG" firstAttribute="leading" secondItem="FzN-M7-uoW" secondAttribute="leading" id="bBJ-xR-9Qb"/>
+                            <constraint firstItem="6a8-rb-QRC" firstAttribute="trailing" secondItem="Jj0-V0-4P1" secondAttribute="trailing" id="mgP-MJ-Vjl"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xE6-r8-uQ4"/>
                     <connections>
+                        <outlet property="progressView" destination="Jj0-V0-4P1" id="KgD-5U-0f6"/>
                         <outlet property="webView" destination="eTb-GO-NwG" id="Vji-jq-7ai"/>
                     </connections>
                 </viewController>
