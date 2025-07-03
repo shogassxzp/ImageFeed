@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 
 protocol WebViewViewControllerDelegate: AnyObject {
-    func webViewViewController(_ vc: WebViewViewController, didAuthentcateWithCode code: String)
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
@@ -23,14 +23,14 @@ final class WebViewViewController: UIViewController {
         loadAuthView()
         setUpProgressView()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         webView.addObserver(self,
                             forKeyPath: #keyPath(WKWebView.estimatedProgress),
                             options: .new,
                             context: nil)
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
     }
@@ -50,15 +50,17 @@ final class WebViewViewController: UIViewController {
             return
         }
         let request = URLRequest(url: url)
+        print(request)
         webView.load(request)
     }
 
     func setUpProgressView() {
         progressView.progressTintColor = UIColor(named: "YP Black")
     }
+
     override func observeValue(forKeyPath keyPath: String?,
                                of object: Any?,
-                               change: [NSKeyValueChangeKey : Any]?,
+                               change: [NSKeyValueChangeKey: Any]?,
                                context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(WKWebView.estimatedProgress) {
             updateProgress()
@@ -66,6 +68,7 @@ final class WebViewViewController: UIViewController {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }
+
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
@@ -75,26 +78,34 @@ final class WebViewViewController: UIViewController {
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
-                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
-    ) {
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
-            // TODO: process code
+            print("Получен код: \(code)")
+            OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+                switch result {
+                case .success(let token):
+                    print("Токен получен: \(token)")
+                    self.delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+                case .failure(let error):
+                    print("Ошибка: \(error.localizedDescription)")
+                }
+            }
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
         }
     }
-
-    private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItems = items.first(where: { $0.name == "code" }) {
-            return codeItems.value
-        } else {
-            return nil
+        private func code(from navigationAction: WKNavigationAction) -> String? {
+            if
+                let url = navigationAction.request.url,
+                let urlComponents = URLComponents(string: url.absoluteString),
+                urlComponents.path == "/oauth/authorize/native",
+                let items = urlComponents.queryItems,
+                let codeItems = items.first(where: { $0.name == "code" }) {
+                return codeItems.value
+            } else {
+                return nil
+            }
         }
     }
-}
+

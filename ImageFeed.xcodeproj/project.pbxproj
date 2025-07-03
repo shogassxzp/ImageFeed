@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F8014EE2E160B6C003137FD /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8014ED2E160B6C003137FD /* OAuth2Service.swift */; };
+		1F8014F02E16F9C1003137FD /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8014EF2E16F9C1003137FD /* OAuth2TokenStorage.swift */; };
 		1FA0AF582DFC936D00EFB101 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0AF4E2DFC936D00EFB101 /* AuthViewController.swift */; };
 		1FA0AF652DFC93EA00EFB101 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA0AF642DFC93EA00EFB101 /* WebViewViewController.swift */; };
 		1FA0AF6C2DFCAAC400EFB101 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA0AF6A2DFCAAC000EFB101 /* WebKit.framework */; };
@@ -14,6 +16,8 @@
 
 /* Begin PBXFileReference section */
 		1F072D462DD61B7B00DE9F2C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F8014ED2E160B6C003137FD /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
+		1F8014EF2E16F9C1003137FD /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		1FA0AF4E2DFC936D00EFB101 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		1FA0AF642DFC93EA00EFB101 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		1FA0AF6A2DFCAAC000EFB101 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -83,6 +87,8 @@
 			children = (
 				1FA0AF4E2DFC936D00EFB101 /* AuthViewController.swift */,
 				1FA0AF642DFC93EA00EFB101 /* WebViewViewController.swift */,
+				1F8014ED2E160B6C003137FD /* OAuth2Service.swift */,
+				1F8014EF2E16F9C1003137FD /* OAuth2TokenStorage.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -162,6 +168,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA0AF652DFC93EA00EFB101 /* WebViewViewController.swift in Sources */,
+				1F8014EE2E160B6C003137FD /* OAuth2Service.swift in Sources */,
+				1F8014F02E16F9C1003137FD /* OAuth2TokenStorage.swift in Sources */,
 				1FA0AF582DFC936D00EFB101 /* AuthViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

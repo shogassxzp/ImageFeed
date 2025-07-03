@@ -27,8 +27,15 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         }
     }
 
-    func webViewViewController(_ vc: WebViewViewController, didAuthentcateWithCode code: String) {
-    }
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+            OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+                switch result {
+                case .success(let token):
+                    vc.dismiss(animated: true)
+                case .failure(let error):
+                }
+            }
+        }
 
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         navigationController?.popViewController(animated: true)
