@@ -7,8 +7,8 @@ protocol WebViewViewControllerDelegate: AnyObject {
 }
 
 final class WebViewViewController: UIViewController {
-    @IBOutlet var progressView: UIProgressView!
-    @IBOutlet var webView: WKWebView!
+    @IBOutlet private var progressView: UIProgressView!
+    @IBOutlet private var webView: WKWebView!
 
     weak var delegate: WebViewViewControllerDelegate?
 
@@ -47,7 +47,7 @@ final class WebViewViewController: UIViewController {
         webView.load(request)
     }
 
-    func setUpProgressView() {
+    private func setUpProgressView() {
         progressView.progressTintColor = UIColor(named: "YP Black")
     }
 
@@ -85,7 +85,6 @@ extension WebViewViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-
 
     private func code(from navigationAction: WKNavigationAction) -> String? {
         if let url = navigationAction.request.url,

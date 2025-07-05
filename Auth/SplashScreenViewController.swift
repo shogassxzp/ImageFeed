@@ -1,21 +1,21 @@
 import UIKit
 
-private let showAuthenticationScreenSegueIdentifier = "showAuthView"
-
 final class SplashScreenViewController: UIViewController, AuthViewControllerDelegate {
+    private let showAuthenticationScreenSegueIdentifier = "showAuthView"
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         if OAuth2TokenStorage.shared.token != nil {
             print("Токен есть, переключаюсь на TabBar")
-            switchToTabBarContrller()
+            switchToTabBarController()
         } else {
             print("Токена нет, иду на авторизацию")
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
     }
 
-    private func switchToTabBarContrller() {
+    private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Неправильная настройка окна")
             return
@@ -45,7 +45,7 @@ extension SplashScreenViewController {
 
     func didAuthenticate(_ vc: AuthViewController) {
         print("didAuthenticate вызван, переключаюсь на TabBar")
-        switchToTabBarContrller()
+        switchToTabBarController()
         vc.dismiss(animated: true)
     }
 }

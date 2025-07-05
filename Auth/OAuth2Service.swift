@@ -55,9 +55,7 @@ final class OAuth2Service {
                     let tokenResponse = try JSONDecoder().decode(OAuthTokenResponse.self, from: data)
                     print("Токен декодирован: \(tokenResponse.accessToken)")
                     OAuth2TokenStorage.shared.token = tokenResponse.accessToken
-                    DispatchQueue.main.async {
-                        completion(.success(tokenResponse.accessToken))
-                    }
+                    completion(.success(tokenResponse.accessToken))
                 } catch {
                     print("Ошибка декодирования")
                     completion(.failure(NetworkError.urlRequestError(error)))

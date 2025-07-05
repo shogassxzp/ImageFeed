@@ -1,7 +1,7 @@
 import UIKit
 
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
-    private let ShowWebViewSegueIdentifier = "ShowWebView"
+    private let showWebViewSegueIdentifier = "ShowWebView"
 
     weak var delegate: AuthViewControllerDelegate?
 
@@ -15,15 +15,15 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     }
 
     private func configureBackButton() {
-        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "Backward")
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "Backward")
+        navigationController?.navigationBar.backIndicatorImage = UIImage(resource: .backward)
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(resource: .backward)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: .none)
-        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
+        navigationItem.backBarButtonItem?.tintColor = UIColor(resource: .ypBlack)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("Подготовка сегвея: \(segue.identifier ?? "Нет идентификатора")")
-        if segue.identifier == ShowWebViewSegueIdentifier,
+        if segue.identifier == showWebViewSegueIdentifier,
            let webViewController = segue.destination as? WebViewViewController {
             webViewController.delegate = self
             print("Делегат установлен для WebViewViewController")
@@ -39,7 +39,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token
                 print("Токен получен: \(token), вызываем делегата")
-                if let delegate = self.delegate {
+                if self.delegate != nil {
                     print("Делегат Auth существует, вызываем didAuthenticate")
                     self.delegate?.didAuthenticate(self)
                 } else {
