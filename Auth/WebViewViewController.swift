@@ -18,17 +18,13 @@ final class WebViewViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         webView.navigationDelegate = self
         loadAuthView()
         setUpProgressView()
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        webView.addObserver(self,
-                            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-                            options: .new,
-                            context: nil)
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -45,12 +41,9 @@ final class WebViewViewController: UIViewController {
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "scope", value: Constants.accessScope),
         ]
-
-        guard let url = urlComponents.url else {
-            return
-        }
+        guard let url = urlComponents.url else { return }
         let request = URLRequest(url: url)
-        print(request)
+        print("Загружаем запрос: \(request)")
         webView.load(request)
     }
 
@@ -80,32 +73,28 @@ extension WebViewViewController: WKNavigationDelegate {
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
-            print("Получен код: \(code)")
-            OAuth2Service.shared.fetchOAuthToken(code: code) { result in
-                switch result {
-                case .success(let token):
-                    print("Токен получен: \(token)")
-                    self.delegate?.webViewViewController(self, didAuthenticateWithCode: code)
-                case .failure(let error):
-                    print("Ошибка: \(error.localizedDescription)")
-                }
+            print("Код получен в WebView: \(code)")
+            if let delegate = delegate {
+                print("Делегат WebView существует, передаём код")
+                delegate.webViewViewController(self, didAuthenticateWithCode: code)
+            } else {
+                print("Делегат WebView не установлен!")
             }
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
         }
     }
-        private func code(from navigationAction: WKNavigationAction) -> String? {
-            if
-                let url = navigationAction.request.url,
-                let urlComponents = URLComponents(string: url.absoluteString),
-                urlComponents.path == "/oauth/authorize/native",
-                let items = urlComponents.queryItems,
-                let codeItems = items.first(where: { $0.name == "code" }) {
-                return codeItems.value
-            } else {
-                return nil
-            }
-        }
-    }
 
+
+    private func code(from navigationAction: WKNavigationAction) -> String? {
+        if let url = navigationAction.request.url,
+           let urlComponents = URLComponents(string: url.absoluteString),
+           urlComponents.path == "/oauth/authorize/native",
+           let items = urlComponents.queryItems,
+           let codeItem = items.first(where: { $0.name == "code" }) {
+            return codeItem.value
+        }
+        return nil
+    }
+}

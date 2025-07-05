@@ -16,14 +16,14 @@ struct OAuthTokenResponse: Codable {
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
-    
+
     private init() {}
-    
+
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
             return nil
         }
-        
+
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
             URLQueryItem(name: "client_secret", value: Constants.secretKey),
@@ -31,16 +31,16 @@ final class OAuth2Service {
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "grant_type", value: "authorization_code"),
         ]
-        
+
         guard let authTokenUrl = urlComponents.url else {
             return nil
         }
-        
+
         var request = URLRequest(url: authTokenUrl)
         request.httpMethod = "POST"
         return request
     }
-    
+
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard let request = makeOAuthTokenRequest(code: code) else {
             print("Ошибка: Не удалось создать запрос")
@@ -50,21 +50,21 @@ final class OAuth2Service {
 
         let task = URLSession.shared.data(for: request) { result in
             switch result {
-            case .success(let data):
+            case let .success(data):
                 do {
                     let tokenResponse = try JSONDecoder().decode(OAuthTokenResponse.self, from: data)
                     print("Токен декодирован: \(tokenResponse.accessToken)")
                     OAuth2TokenStorage.shared.token = tokenResponse.accessToken
                     completion(.success(tokenResponse.accessToken))
                 } catch {
-                    print("Ошибка декодирования: \(error.localizedDescription)")
+                    print("Ошибка декодирования")
                     completion(.failure(NetworkError.urlRequestError(error)))
                 }
-            case .failure(let error):
-                if let networkError = error as? NetworkError, case .httpStatusCode(let statusCode) = networkError {
+            case let .failure(error):
+                if let networkError = error as? NetworkError, case let .httpStatusCode(statusCode) = networkError {
                     print("Ошибка сервера: Код \(statusCode)")
                 } else {
-                    print("Сетевая ошибка: \(error.localizedDescription)")
+                    print("Сетевая ошибка")
                 }
                 completion(.failure(error))
             }
