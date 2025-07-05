@@ -22,7 +22,7 @@ final class ProfileViewController: UIViewController {
         bioLabel = UILabel()
         userTagLabel = UILabel()
         logoutButton = UIButton(type: .system)
-        
+
         configView()
 
         // Disable mask
@@ -61,8 +61,8 @@ final class ProfileViewController: UIViewController {
             logoutButton.heightAnchor.constraint(equalToConstant: 44),
         ])
     }
+
     func configView() {
-        
         view.backgroundColor = .ypBlack
 
         profilePhoto = UIImageView(image: profileImage)
@@ -89,6 +89,5 @@ final class ProfileViewController: UIViewController {
         logoutButton.setImage(logoutImage ?? nil, for: .normal)
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
-        
     }
 }
