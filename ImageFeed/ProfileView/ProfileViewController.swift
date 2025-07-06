@@ -10,8 +10,8 @@ private var logoutButton = UIButton()
 
 // Create images
 
-private let profileImage = UIImage(named: "unsplash")
-private let logoutImage = UIImage(named: "Logout")
+private let profileImage = UIImage(resource: .unsplash)
+private let logoutImage = UIImage(resource: .logout)
 
 final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
@@ -86,7 +86,7 @@ final class ProfileViewController: UIViewController {
         profilePhoto.contentMode = .scaleToFill
         profilePhoto.tintColor = .gray
 
-        logoutButton.setImage(logoutImage ?? nil, for: .normal)
+        logoutButton.setImage(logoutImage, for: .normal)
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
     }

@@ -48,7 +48,7 @@ final class WebViewViewController: UIViewController {
     }
 
     private func setUpProgressView() {
-        progressView.progressTintColor = UIColor(named: "YP Black")
+        progressView.progressTintColor = UIColor(resource: .ypBlack)
     }
 
     override func observeValue(forKeyPath keyPath: String?,
