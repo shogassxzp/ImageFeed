@@ -17,6 +17,7 @@ final class ImageListViewController: UIViewController {
         photos = photosName.enumerated().map { _, name in
             let date = Date()
             return (image: name, date: date, isLiked: false)
+            
         }
     }
 

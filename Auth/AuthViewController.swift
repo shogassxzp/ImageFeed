@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     private let showWebViewSegueIdentifier = "ShowWebView"
@@ -34,10 +35,12 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("Получен код в AuthViewController: \(code)")
+        ProgressHUD.animate()
         OAuth2Service.shared.fetchOAuthToken(code: code) { result in
             switch result {
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token
+                ProgressHUD.dismiss()
                 print("Токен получен: \(token), вызываем делегата")
                 if self.delegate != nil {
                     print("Делегат Auth существует, вызываем didAuthenticate")

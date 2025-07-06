@@ -1,0 +1,15 @@
+{
+  "originHash" : "ebfbbf38cff64d5e0e8f483e40614ef98180b0cc04b3d3d56de2857d16dd10c3",
+  "pins" : [
+    {
+      "identity" : "progresshud",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/relatedcode/ProgressHUD.git",
+      "state" : {
+        "revision" : "4aa638a88450d6d48a6620070722e875e7a179ef",
+        "version" : "14.1.4"
+      }
+    }
+  ],
+  "version" : 3
+}
