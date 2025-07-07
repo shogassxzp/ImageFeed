@@ -24,7 +24,7 @@ final class ProfileViewController: UIViewController {
         logoutButton = UIButton(type: .system)
 
         configView()
-
+        
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
