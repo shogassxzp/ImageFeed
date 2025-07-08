@@ -73,6 +73,8 @@ extension WebViewViewController: WKNavigationDelegate {
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
+            UIBlockingProgressHUD.show()
+            print("Lock user interactions in WebView")
             print("Код получен в WebView: \(code)")
             if let delegate = delegate {
                 print("Делегат WebView существует, передаём код")

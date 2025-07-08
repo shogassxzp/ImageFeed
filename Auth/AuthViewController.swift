@@ -35,12 +35,11 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("Получен код в AuthViewController: \(code)")
-        ProgressHUD.animate()
         OAuth2Service.shared.fetchOAuthToken(code: code) { result in
             switch result {
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token
-                ProgressHUD.dismiss()
+                
                 print("Токен получен: \(token), вызываем делегата")
                 if self.delegate != nil {
                     print("Делегат Auth существует, вызываем didAuthenticate")
@@ -49,7 +48,9 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
                     print("Делегат Auth не установлен!")
                 }
                 vc.dismiss(animated: true)
+                UIBlockingProgressHUD.dismiss()
             case let .failure(error):
+                UIBlockingProgressHUD.dismiss()
                 print("Ошибка в AuthViewController: \(error.localizedDescription)")
             }
         }
