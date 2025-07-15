@@ -1,5 +1,5 @@
-import UIKit
 import ProgressHUD
+import UIKit
 
 // Create View`s
 
@@ -25,7 +25,7 @@ final class ProfileViewController: UIViewController {
         logoutButton = UIButton(type: .system)
 
         configView()
-        
+
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -61,6 +61,7 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 44),
             logoutButton.heightAnchor.constraint(equalToConstant: 44),
         ])
+        loadProfileData()
     }
 
     func configView() {
@@ -90,5 +91,30 @@ final class ProfileViewController: UIViewController {
         logoutButton.setImage(logoutImage, for: .normal)
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
+    }
+
+    private func loadProfileData() {
+        guard let token = UserDefaults.standard.string(forKey: "UnsplashAccessToken") else {
+            print("Нет токена")
+            return
+        }
+
+        ProgressHUD.animate()
+
+        ProfileService.shared.fetchProfile(token) {
+            result in
+
+            switch result {
+            case let .success(profile):
+                ProgressHUD.dismiss()
+                usernameLabel.text = profile.name
+                userTagLabel.text = profile.loginName
+                bioLabel.text = profile.bio ?? "No bio avalible "
+
+            case let .failure(error):
+                ProgressHUD.dismiss()
+                print("Ошибка загрузки профиля")
+            }
+        }
     }
 }

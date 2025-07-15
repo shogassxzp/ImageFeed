@@ -5,7 +5,7 @@ final class OAuth2TokenStorage {
     private init() {}
 
     private let tokenKey = "UnsplashAccessToken"
-
+    // OAuth2TokenStorage.shared.token
     var token: String? {
         get {
             let token = UserDefaults.standard.string(forKey: tokenKey)
