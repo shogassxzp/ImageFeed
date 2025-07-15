@@ -37,4 +37,67 @@ final class ProfileService {
             self.bio = result.bio
         }
     }
+    
+    private func makeProfileRequest(token:String) -> URLRequest? {
+        guard let url = URL(string: "https://api.unsplash.com/me") else {
+            return nil
+        }
+        var request = URLRequest(url:url)
+        request.setValue("Brear \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        return request
+    }
+    
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+        task?.cancel()
+        
+        guard let request = makeProfileRequest(token: token) else {
+            DispatchQueue.main.async {
+                let error = URLError(.badURL)
+                print("Неверный URL")
+                completion(.failure(error))
+            }
+            return
+        }
+        task = urlSession.dataTask(with: request) {data, response, error in
+            self.task = nil
+            
+            if let error = error {
+                DispatchQueue.main.async {
+                    print("Ошибка сетевого запроса")
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    let error = URLError(.badServerResponse)
+                    print("Данные от сервера не получены")
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                let profileResult = try decoder.decode(ProfileResult.self, from: data)
+                let profile = Profile(result: profileResult)
+                DispatchQueue.main.async {
+                    print("Профиль загружен \(profile.username)")
+                    completion(.success(profile))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    print("Ошибка декодера")
+                    completion(.failure(error))
+                }
+            }
+        }
+        task?.resume()
+    }
+}
+
+extension ProfileService {
+    static let shared = ProfileService()
 }
