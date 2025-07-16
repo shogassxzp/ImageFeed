@@ -1,18 +1,24 @@
 import UIKit
 
 final class SplashScreenViewController: UIViewController, AuthViewControllerDelegate {
+    private let storage = OAuth2TokenStorage.shared
+    private let profileService = ProfileService.shared
+
     private let showAuthenticationScreenSegueIdentifier = "showAuthView"
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        checkAuthentication()
+    }
 
-        if OAuth2TokenStorage.shared.token != nil {
-            print("Токен есть, переключаюсь на TabBar")
-            switchToTabBarController()
-        } else {
+    private func checkAuthentication() {
+        guard let token = storage.token else {
             print("Токена нет, иду на авторизацию")
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            return
         }
+        print("Токен есть, загружаю данные профиля и перехожу на TabBar")
+        fetchProfile(token)
     }
 
     private func switchToTabBarController() {
@@ -43,9 +49,37 @@ extension SplashScreenViewController {
         }
     }
 
+    // When user logged in unsplash switch to TabBar and call fetchProfile
     func didAuthenticate(_ vc: AuthViewController) {
-        print("didAuthenticate вызван, переключаюсь на TabBar")
-        switchToTabBarController()
+        print("didAuthenticate вызван, отпарвляю запрос на данные пользователя")
+        guard let token = storage.token else {
+            print("Ошибка с токеном")
+            return
+        }
+        fetchProfile(token)
+        print("Получаю данные пользователя")
         vc.dismiss(animated: true)
+    }
+
+    // Fetch profile and switch to TabBar
+
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+
+        profileService.fetchProfile(token) { [weak self] result in
+            DispatchQueue.main.async {
+                UIBlockingProgressHUD.dismiss()
+
+                guard self != nil else { return }
+
+                switch result {
+                case .success:
+                    print("Профиль загружен, прехожу на TabBar")
+                    self?.switchToTabBarController()
+                case .failure:
+                    print("Ошибка загрузки профиля")
+                }
+            }
+        }
     }
 }

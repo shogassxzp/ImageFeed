@@ -25,7 +25,7 @@ final class ProfileViewController: UIViewController {
         logoutButton = UIButton(type: .system)
 
         configView()
-
+        updateProfileData()
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -61,10 +61,9 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 44),
             logoutButton.heightAnchor.constraint(equalToConstant: 44),
         ])
-        loadProfileData()
     }
 
-    func configView() {
+    private func configView() {
         view.backgroundColor = .ypBlack
 
         profilePhoto = UIImageView(image: profileImage)
@@ -93,28 +92,15 @@ final class ProfileViewController: UIViewController {
         logoutButton.contentHorizontalAlignment = .right
     }
 
-    private func loadProfileData() {
-        guard let token = UserDefaults.standard.string(forKey: "UnsplashAccessToken") else {
-            print("Нет токена")
+    private func updateProfileData() {
+        guard let profile = ProfileService.shared.profileData.self else {
+            print("Данные профиля отсутсвуют")
             return
         }
-
-        ProgressHUD.animate()
-
-        ProfileService.shared.fetchProfile(token) {
-            result in
-
-            switch result {
-            case let .success(profile):
-                ProgressHUD.dismiss()
-                usernameLabel.text = profile.name
-                userTagLabel.text = profile.loginName
-                bioLabel.text = profile.bio ?? "No bio avalible "
-
-            case let .failure(error):
-                ProgressHUD.dismiss()
-                print("Ошибка загрузки профиля")
-            }
+        DispatchQueue.main.async {
+            usernameLabel.text = profile.name
+            userTagLabel.text = profile.loginName
+            bioLabel.text = profile.bio ?? "No Bio avalible"
         }
     }
 }

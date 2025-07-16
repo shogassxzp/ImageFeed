@@ -3,6 +3,10 @@ import Foundation
 final class ProfileService {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
+    
+    private(set) var profileData: Profile?
+    
+    private init() {}
 
     struct ProfileResult: Codable {
         let username: String
@@ -81,7 +85,7 @@ final class ProfileService {
                 let profileResult = try decoder.decode(ProfileResult.self, from: data)
                 let profile = Profile(result: profileResult)
                 DispatchQueue.main.async {
-                    print("Профиль загружен \(profile.username)")
+                    self.profileData = profile
                     completion(.success(profile))
                 }
             } catch {
