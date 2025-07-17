@@ -3,6 +3,7 @@ import UIKit
 final class SplashScreenViewController: UIViewController, AuthViewControllerDelegate {
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
+    private let profilePhotoService = ProfileImageService.shared
 
     private let showAuthenticationScreenSegueIdentifier = "showAuthView"
 
@@ -67,16 +68,26 @@ extension SplashScreenViewController {
         UIBlockingProgressHUD.show()
 
         profileService.fetchProfile(token) { [weak self] result in
-            DispatchQueue.main.async {
-                UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
 
-                guard self != nil else { return }
-
-                switch result {
-                case .success:
-                    print("Профиль загружен, прехожу на TabBar")
-                    self?.switchToTabBarController()
-                case .failure:
+            switch result {
+            case let .success(profile):
+                print("Профиль загружен,загружаю аватарку для \(profile.username)")
+                self.profilePhotoService.fetchProfileImage(username: profile.username) { result in
+                    DispatchQueue.main.async {
+                        UIBlockingProgressHUD.dismiss()
+                        switch result {
+                        case let .success(avatarURL):
+                            print("Аватарка загружена")
+                            self.switchToTabBarController()
+                        case let .failure(error):
+                            print("Ошибка загрузки аватарки")
+                        }
+                    }
+                }
+            case let .failure(error):
+                DispatchQueue.main.async {
+                    UIBlockingProgressHUD.dismiss()
                     print("Ошибка загрузки профиля")
                 }
             }

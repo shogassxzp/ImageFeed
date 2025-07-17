@@ -87,6 +87,7 @@ final class ProfileService {
                 DispatchQueue.main.async {
                     self.profileData = profile
                     completion(.success(profile))
+                    
                 }
             } catch {
                 DispatchQueue.main.async {
