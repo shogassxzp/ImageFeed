@@ -1,6 +1,8 @@
 import ProgressHUD
 import UIKit
 
+private var profileImageServiceObserver: NSObjectProtocol?
+
 // Create View`s
 
 private var profilePhoto = UIImageView()
@@ -26,6 +28,18 @@ final class ProfileViewController: UIViewController {
 
         configView()
         updateProfileData()
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(forName: ProfileImageService.didChangeNotification,
+                         object: nil,
+                         queue: .main,) {
+                [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
+                         
+        
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -102,5 +116,12 @@ final class ProfileViewController: UIViewController {
             userTagLabel.text = profile.loginName
             bioLabel.text = profile.bio ?? "No Bio avalible"
         }
+    }
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else {return}
+        print(url)
     }
 }

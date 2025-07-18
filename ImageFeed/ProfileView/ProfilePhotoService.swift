@@ -1,6 +1,9 @@
 import Foundation
 
 final class ProfileImageService {
+    
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    
     private(set) var avatarURL: String?
     
     private let urlSession = URLSession.shared
@@ -38,7 +41,7 @@ final class ProfileImageService {
         return request
     }
     
-    func fetchProfileImage(username: String,_ completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfileImageURL(username: String,_ completion: @escaping (Result<String, Error>) -> Void) {
         task?.cancel()
 
         guard let token = storage.token else {
@@ -86,6 +89,12 @@ final class ProfileImageService {
                     self?.avatarURL = avatarURL
                     print("Получен URL аватарки")
                     completion(.success(avatarURL))
+                    NotificationCenter.default
+                        .post(
+                            name: ProfileImageService.didChangeNotification,
+                            object: self,
+                            userInfo: ["URL": avatarURL]
+                        )
                 }
             } catch {
                 DispatchQueue.main.async {

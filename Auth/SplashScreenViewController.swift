@@ -73,7 +73,7 @@ extension SplashScreenViewController {
             switch result {
             case let .success(profile):
                 print("Профиль загружен,загружаю аватарку для \(profile.username)")
-                self.profilePhotoService.fetchProfileImage(username: profile.username) { result in
+                self.profilePhotoService.fetchProfileImageURL(username: profile.username) { result in
                     DispatchQueue.main.async {
                         UIBlockingProgressHUD.dismiss()
                         switch result {
