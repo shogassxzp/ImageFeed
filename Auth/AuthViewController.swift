@@ -1,27 +1,26 @@
-import UIKit
 import ProgressHUD
+import UIKit
 
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     private let showWebViewSegueIdentifier = "ShowWebView"
-
     weak var delegate: AuthViewControllerDelegate?
-
+    
     @IBOutlet var loginButton: UIButton!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loginButton.layer.masksToBounds = true
         loginButton.layer.cornerRadius = 16
         configureBackButton()
     }
-
+    
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(resource: .backward)
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(resource: .backward)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: .none)
         navigationItem.backBarButtonItem?.tintColor = UIColor(resource: .ypBlack)
     }
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("Подготовка сегвея: \(segue.identifier ?? "Нет идентификатора")")
         if segue.identifier == showWebViewSegueIdentifier,
@@ -32,7 +31,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
             print("Сегвей не соответствует ShowWebView или тип неверный")
         }
     }
-
+    
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("Получен код в AuthViewController: \(code)")
         OAuth2Service.shared.fetchOAuthToken(code: code) { result in
@@ -51,16 +50,18 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
                 UIBlockingProgressHUD.dismiss()
             case let .failure(error):
                 UIBlockingProgressHUD.dismiss()
-                print("Ошибка в AuthViewController: \(error.localizedDescription)")
+                AlertPresenter.showErrorAlert(on: self)
+                print("Ошибка: \(error.localizedDescription)")
             }
         }
     }
-
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         navigationController?.popViewController(animated: true)
     }
 }
-
-protocol AuthViewControllerDelegate: AnyObject {
-    func didAuthenticate(_ vc: AuthViewController)
+    
+    protocol AuthViewControllerDelegate: AnyObject {
+        func didAuthenticate(_ vc: AuthViewController)
+    
 }
