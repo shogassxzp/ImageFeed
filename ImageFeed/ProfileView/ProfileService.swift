@@ -3,9 +3,8 @@ import Foundation
 final class ProfileService {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
-    
     private(set) var profileData: Profile?
-    
+
     private init() {}
 
     struct ProfileResult: Codable {
@@ -60,40 +59,18 @@ final class ProfileService {
             }
             return
         }
-        task = urlSession.dataTask(with: request) { data, response, error in
+        task = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self else { return }
             self.task = nil
 
-            if let error = error {
-                DispatchQueue.main.async {
-                    print("Ошибка сетевого запроса")
-                    completion(.failure(error))
-                }
-                return
-            }
-
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    let error = URLError(.badServerResponse)
-                    print("Данные от сервера не получены")
-                    completion(.failure(error))
-                }
-                return
-            }
-
-            do {
-                let decoder = JSONDecoder()
-                let profileResult = try decoder.decode(ProfileResult.self, from: data)
+            switch result {
+            case let .success(profileResult):
                 let profile = Profile(result: profileResult)
-                DispatchQueue.main.async {
-                    self.profileData = profile
-                    completion(.success(profile))
-                    
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    print("Ошибка декодера \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
+                self.profileData = profile
+                completion(.success(profile))
+            case let .failure(error):
+                print("Ошибка получения профиля \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
         task?.resume()

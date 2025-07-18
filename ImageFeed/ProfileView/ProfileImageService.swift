@@ -1,14 +1,12 @@
 import Foundation
 
 final class ProfileImageService {
-    
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
-    
-    private(set) var avatarURL: String?
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var storage = OAuth2TokenStorage.shared
+    private(set) var avatarURL: String?
     
     private init() {}
     
@@ -61,46 +59,23 @@ final class ProfileImageService {
             }
             return
         }
-        task = urlSession.dataTask(with: request) { [weak self] data, response, error in
-            self?.task = nil
-
-            if let error = error {
-                DispatchQueue.main.async {
-                    print("Ошибка сетевого запроса")
-                    completion(.failure(error))
-                }
-                return
-            }
-
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    let error = URLError(.badServerResponse)
-                    print("Данные от сервера не получены")
-                    completion(.failure(error))
-                }
-                return
-            }
-
-            do {
-                let decoder = JSONDecoder()
-                let userResult = try decoder.decode(UserResult.self, from: data)
+        task = urlSession.objectTask(for: request) {[weak self] (result: Result<UserResult,Error>) in
+            guard let self else {return}
+            self.task = nil
+            
+            switch result {
+            case .success(let userResult):
                 let avatarURL = userResult.profileImage.small
-                DispatchQueue.main.async {
-                    self?.avatarURL = avatarURL
-                    print("Получен URL аватарки")
-                    completion(.success(avatarURL))
-                    NotificationCenter.default
-                        .post(
-                            name: ProfileImageService.didChangeNotification,
-                            object: self,
-                            userInfo: ["URL": avatarURL]
-                        )
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    print("Ошибка декодера \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
+                self.avatarURL = avatarURL
+                print("Получен URL аватарки: \(avatarURL)")
+                completion (.success(avatarURL))
+                NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
+                                                object: self,
+                                                userInfo: ["URL": avatarURL]
+                )
+            case .failure(let error):
+                print("Ошибка получения URL аватарки \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
         task?.resume()
