@@ -7,7 +7,7 @@
 \pard\pardeftab720\partightenfactor0
 
 \f0\fs26 \cf0 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 # Created by https://www.toptal.com/developers/gitignore/api/swift,xcode,macos\
+# Created by https://www.toptal.com/developers/gitignore/api/swift,xcode,macos\
 # Edit at https://www.toptal.com/developers/gitignore?templates=swift,xcode,macos\
 \
 ### macOS ###\
@@ -133,12 +133,12 @@ iOSInjectionProject/\
 \
 ### Xcode Patch ###\
 *.xcodeproj/*\
-!*.xcodeproj/project.pbxproj\
-!*.xcodeproj/xcshareddata/\
-!*.xcodeproj/project.xcworkspace/\
-!*.xcworkspace/contents.xcworkspacedata\
+*.xcodeproj/project.pbxproj\
+*.xcodeproj/xcshareddata/\
+*.xcodeproj/project.xcworkspace/\
+*.xcworkspace/contents.xcworkspacedata\
 /*.gcno\
-**/xcshareddata/WorkspaceSettings.xcsettings\
+*/xcshareddata/WorkspaceSettings.xcsettings\
 \
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode,macos\
 }
