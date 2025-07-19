@@ -154,6 +154,7 @@
 			packageReferences = (
 				1F05DE1D2E1B0E3F0053C7E2 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				1F3327AF2E2A05B6007E02C6 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				1F2C65FC2E2C11E80061B988 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1F072D472DD61B7B00DE9F2C /* Products */;
@@ -410,6 +411,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 14.1.4;
+			};
+		};
+		1F2C65FC2E2C11E80061B988 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
 			};
 		};
 		1F3327AF2E2A05B6007E02C6 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
