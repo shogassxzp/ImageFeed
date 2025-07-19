@@ -1,8 +1,10 @@
 import ProgressHUD
 import UIKit
+import Kingfisher
 
 private var profileImageServiceObserver: NSObjectProtocol?
-
+private let photoProcessor = RoundCornerImageProcessor(cornerRadius:20 )
+    
 // Create View`s
 
 private var profilePhoto = UIImageView()
@@ -100,6 +102,7 @@ final class ProfileViewController: UIViewController {
 
         profilePhoto.contentMode = .scaleToFill
         profilePhoto.tintColor = .gray
+        profilePhoto.kf.indicatorType = .activity
 
         logoutButton.setImage(logoutImage, for: .normal)
         logoutButton.tintColor = .ypRed
@@ -122,6 +125,8 @@ final class ProfileViewController: UIViewController {
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else {return}
-        print(url)
+        profilePhoto.kf.setImage(with: url,
+                                 placeholder: UIImage(resource: .photo),
+                                 options: [.processor(photoProcessor)])
     }
 }
