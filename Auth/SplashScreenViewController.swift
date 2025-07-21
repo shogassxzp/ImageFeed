@@ -33,15 +33,11 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
     }
 
     private func presentAuthView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
-            assertionFailure("Не удалось инициализировать AuthViewController")
-            return
-        }
+        let authViewController = AuthViewController()
         authViewController.delegate = self
-        authViewController.modalPresentationStyle = .fullScreen
-
-        present(authViewController, animated: true)
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true)
     }
 
     private func checkAuthentication() {
@@ -70,7 +66,6 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
 extension SplashScreenViewController {
     // When user logged in unsplash switch to TabBar and call fetchProfile
     func didAuthenticate(_ vc: AuthViewController) {
-        UIBlockingProgressHUD.show()
         print("didAuthenticate вызван, отпарвляю запрос на данные пользователя")
         guard let token = storage.token else {
             print("Ошибка с токеном")
@@ -83,8 +78,6 @@ extension SplashScreenViewController {
     // Fetch profile and switch to TabBar
 
     private func fetchProfile(_ token: String) {
-        UIBlockingProgressHUD.show()
-
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
 
