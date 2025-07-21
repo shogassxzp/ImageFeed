@@ -1,21 +1,53 @@
 import UIKit
 
 final class SplashScreenViewController: UIViewController, AuthViewControllerDelegate {
+    private var logoImageView = UIImageView()
+
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let profilePhotoService = ProfileImageService.shared
-
-    private let showAuthenticationScreenSegueIdentifier = "showAuthView"
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkAuthentication()
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        logoImageView.image = UIImage(resource: .logoOfUnsplash)
+        view.backgroundColor = UIColor(resource: .ypBlack)
+        view.addSubview(logoImageView)
+
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 80),
+            logoImageView.heightAnchor.constraint(equalToConstant: 80),
+        ])
+    }
+
+    private func presentAuthView() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            assertionFailure("Не удалось инициализировать AuthViewController")
+            return
+        }
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+
+        present(authViewController, animated: true)
+    }
+
     private func checkAuthentication() {
         guard let token = storage.token else {
             print("Токена нет, иду на авторизацию")
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            presentAuthView()
             return
         }
         print("Токен есть, загружаю данные профиля и перехожу на TabBar")
@@ -31,27 +63,14 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
             .instantiateViewController(withIdentifier: "TabBarViewController")
 
         window.rootViewController = tabBarController
+        UIBlockingProgressHUD.dismiss()
     }
 }
 
 extension SplashScreenViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers.first as? AuthViewController
-            else {
-                assertionFailure("Failure to prepare for \(showAuthenticationScreenSegueIdentifier)")
-                return
-            }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
-
     // When user logged in unsplash switch to TabBar and call fetchProfile
     func didAuthenticate(_ vc: AuthViewController) {
+        UIBlockingProgressHUD.show()
         print("didAuthenticate вызван, отпарвляю запрос на данные пользователя")
         guard let token = storage.token else {
             print("Ошибка с токеном")
@@ -59,7 +78,6 @@ extension SplashScreenViewController {
         }
         fetchProfile(token)
         print("Получаю данные пользователя")
-        vc.dismiss(animated: true)
     }
 
     // Fetch profile and switch to TabBar
@@ -78,10 +96,9 @@ extension SplashScreenViewController {
                         UIBlockingProgressHUD.dismiss()
                         switch result {
                         case let .success(avatarURL):
-                            print("Аватарка загружена")
                             self.switchToTabBarController()
                         case let .failure(error):
-                            print("Ошибка загрузки аватарки")
+                            print("Ошибка получения avatarURL")
                         }
                     }
                 }

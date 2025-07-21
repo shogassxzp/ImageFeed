@@ -3,7 +3,6 @@ import UIKit
 import Kingfisher
 
 private var profileImageServiceObserver: NSObjectProtocol?
-private let photoProcessor = RoundCornerImageProcessor(cornerRadius:20 )
     
 // Create View`s
 
@@ -21,7 +20,6 @@ private let logoutImage = UIImage(resource: .logout)
 final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-
         profilePhoto = UIImageView(image: profileImage)
         usernameLabel = UILabel()
         bioLabel = UILabel()
@@ -37,6 +35,7 @@ final class ProfileViewController: UIViewController {
                          queue: .main,) {
                 [weak self] _ in
                 guard let self = self else { return }
+                print("loading")
                 self.updateAvatar()
             }
         updateAvatar()
@@ -125,8 +124,9 @@ final class ProfileViewController: UIViewController {
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else {return}
+        print("Загружаю и устанавливаю изображение пользователя")
         profilePhoto.kf.setImage(with: url,
                                  placeholder: UIImage(resource: .photo),
-                                 options: [.processor(photoProcessor)])
+                                 options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))])
     }
 }

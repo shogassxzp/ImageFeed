@@ -1,6 +1,10 @@
 import ProgressHUD
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     private let showWebViewSegueIdentifier = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?
@@ -59,9 +63,4 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         navigationController?.popViewController(animated: true)
     }
-}
-    
-    protocol AuthViewControllerDelegate: AnyObject {
-        func didAuthenticate(_ vc: AuthViewController)
-    
 }
