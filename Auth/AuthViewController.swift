@@ -62,7 +62,9 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("Получен код в AuthViewController: \(code)")
         UIBlockingProgressHUD.show()
-        OAuth2Service.shared.fetchOAuthToken(code: code) { result in
+        OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
+            guard let self else { return }
+            UIBlockingProgressHUD.dismiss()
             switch result {
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token

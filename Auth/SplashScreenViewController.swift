@@ -27,8 +27,8 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
         NSLayoutConstraint.activate([
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            logoImageView.widthAnchor.constraint(equalToConstant: 80),
-            logoImageView.heightAnchor.constraint(equalToConstant: 80),
+            logoImageView.widthAnchor.constraint(equalToConstant: 72),
+            logoImageView.heightAnchor.constraint(equalToConstant: 74),
         ])
     }
 
@@ -37,6 +37,7 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
         authViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: authViewController)
         navigationController.modalPresentationStyle = .fullScreen
+        UIBlockingProgressHUD.dismiss()
         present(navigationController, animated: true)
     }
 
@@ -55,11 +56,12 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
             assertionFailure("Неправильная настройка окна")
             return
         }
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = TabBarController()
 
         window.rootViewController = tabBarController
-        UIBlockingProgressHUD.dismiss()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            UIBlockingProgressHUD.dismiss()
+        }
     }
 }
 
@@ -78,6 +80,7 @@ extension SplashScreenViewController {
     // Fetch profile and switch to TabBar
 
     private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
 
@@ -92,6 +95,7 @@ extension SplashScreenViewController {
                             self.switchToTabBarController()
                         case let .failure(error):
                             print("Ошибка получения avatarURL")
+                            UIBlockingProgressHUD.dismiss()
                         }
                     }
                 }

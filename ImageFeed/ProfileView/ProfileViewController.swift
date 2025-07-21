@@ -12,19 +12,9 @@ private var bioLabel = UILabel()
 private var userTagLabel = UILabel()
 private var logoutButton = UIButton()
 
-// Create images
-
-private let profileImage = UIImage(resource: .unsplash)
-private let logoutImage = UIImage(resource: .logout)
-
 final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        profilePhoto = UIImageView(image: profileImage)
-        usernameLabel = UILabel()
-        bioLabel = UILabel()
-        userTagLabel = UILabel()
-        logoutButton = UIButton(type: .system)
 
         configView()
         updateProfileData()
@@ -35,8 +25,8 @@ final class ProfileViewController: UIViewController {
                          queue: .main,) {
                 [weak self] _ in
                 guard let self = self else { return }
-                print("loading")
                 self.updateAvatar()
+                print("get notify")
             }
         updateAvatar()
                          
@@ -81,7 +71,8 @@ final class ProfileViewController: UIViewController {
     private func configView() {
         view.backgroundColor = .ypBlack
 
-        profilePhoto = UIImageView(image: profileImage)
+        profilePhoto.layer.masksToBounds = true
+        profilePhoto.layer.cornerRadius = 35
         usernameLabel = UILabel()
         bioLabel = UILabel()
         userTagLabel = UILabel()
@@ -103,7 +94,7 @@ final class ProfileViewController: UIViewController {
         profilePhoto.tintColor = .gray
         profilePhoto.kf.indicatorType = .activity
 
-        logoutButton.setImage(logoutImage, for: .normal)
+        logoutButton.setImage(UIImage(resource: .logout), for: .normal)
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
     }
