@@ -32,6 +32,17 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
         ])
     }
 
+    private func checkAuthentication() {
+        UIBlockingProgressHUD.show()
+        guard let token = storage.token else {
+            print("Токена нет, иду на авторизацию")
+            presentAuthView()
+            return
+        }
+        print("Токен есть, загружаю данные профиля и перехожу на TabBar")
+        fetchProfile(token)
+    }
+
     private func presentAuthView() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
@@ -40,18 +51,8 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
         }
         authViewController.delegate = self
         authViewController.modalPresentationStyle = .fullScreen
-
+        UIBlockingProgressHUD.dismiss()
         present(authViewController, animated: true)
-    }
-
-    private func checkAuthentication() {
-        guard let token = storage.token else {
-            print("Токена нет, иду на авторизацию")
-            presentAuthView()
-            return
-        }
-        print("Токен есть, загружаю данные профиля и перехожу на TabBar")
-        fetchProfile(token)
     }
 
     private func switchToTabBarController() {
@@ -63,7 +64,9 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
             .instantiateViewController(withIdentifier: "TabBarViewController")
 
         window.rootViewController = tabBarController
-        UIBlockingProgressHUD.dismiss()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            UIBlockingProgressHUD.dismiss()
+        }
     }
 }
 
@@ -83,8 +86,6 @@ extension SplashScreenViewController {
     // Fetch profile and switch to TabBar
 
     private func fetchProfile(_ token: String) {
-        UIBlockingProgressHUD.show()
-
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
 
@@ -98,6 +99,7 @@ extension SplashScreenViewController {
                         case let .success(avatarURL):
                             self.switchToTabBarController()
                         case let .failure(error):
+                            UIBlockingProgressHUD.dismiss()
                             print("Ошибка получения avatarURL")
                         }
                     }

@@ -1,44 +1,63 @@
+import Kingfisher
 import ProgressHUD
 import UIKit
-import Kingfisher
-
-private var profileImageServiceObserver: NSObjectProtocol?
-    
-// Create View`s
-
-private var profilePhoto = UIImageView()
-private var usernameLabel = UILabel()
-private var bioLabel = UILabel()
-private var userTagLabel = UILabel()
-private var logoutButton = UIButton()
-
-// Create images
-
-private let profileImage = UIImage(resource: .unsplash)
-private let logoutImage = UIImage(resource: .logout)
 
 final class ProfileViewController: UIViewController {
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    private var profilePhoto = UIImageView()
+    private var usernameLabel = UILabel()
+    private var bioLabel = UILabel()
+    private var userTagLabel = UILabel()
+    private var logoutButton = UIButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        usernameLabel = UILabel()
-        bioLabel = UILabel()
-        userTagLabel = UILabel()
-        logoutButton = UIButton(type: .system)
-
+        
         configView()
         updateProfileData()
-        
+
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(forName: ProfileImageService.didChangeNotification,
                          object: nil,
                          queue: .main,) {
                 [weak self] _ in
                 guard let self = self else { return }
-                print("loading")
                 self.updateAvatar()
             }
         updateAvatar()
-                         
+    }
+
+    private func configView() {
+        view.backgroundColor = .ypBlack
+
+        usernameLabel = UILabel()
+        bioLabel = UILabel()
+        userTagLabel = UILabel()
+        logoutButton = UIButton(type: .system)
+
+        profilePhoto.layer.masksToBounds = true
+        profilePhoto.layer.cornerRadius = 35
+
+        usernameLabel.text = "username"
+        usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        usernameLabel.textColor = .ypWhite
+
+        userTagLabel.text = "@usernametag"
+        userTagLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        userTagLabel.textColor = .ypGray
+
+        bioLabel.text = "bio"
+        bioLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        bioLabel.textColor = .ypWhite
+
+        profilePhoto.contentMode = .scaleToFill
+        profilePhoto.tintColor = .gray
+        profilePhoto.kf.indicatorType = .activity
+
+        logoutButton.setImage(UIImage(resource: .logout), for: .normal)
+        logoutButton.tintColor = .ypRed
+        logoutButton.contentHorizontalAlignment = .right
         
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -75,38 +94,8 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 44),
             logoutButton.heightAnchor.constraint(equalToConstant: 44),
         ])
-    }
-
-    private func configView() {
-        view.backgroundColor = .ypBlack
-
-        usernameLabel = UILabel()
-        bioLabel = UILabel()
-        userTagLabel = UILabel()
-        logoutButton = UIButton(type: .system)
         
-        profilePhoto.layer.masksToBounds = true
-        profilePhoto.layer.cornerRadius = 35
-
-        usernameLabel.text = "username"
-        usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        usernameLabel.textColor = .ypWhite
-
-        userTagLabel.text = "@usernametag"
-        userTagLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        userTagLabel.textColor = .ypGray
-
-        bioLabel.text = "bio"
-        bioLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        bioLabel.textColor = .ypWhite
-
-        profilePhoto.contentMode = .scaleToFill
-        profilePhoto.tintColor = .gray
-        profilePhoto.kf.indicatorType = .activity
-
-        logoutButton.setImage(logoutImage, for: .normal)
-        logoutButton.tintColor = .ypRed
-        logoutButton.contentHorizontalAlignment = .right
+        
     }
 
     private func updateProfileData() {
@@ -115,16 +104,17 @@ final class ProfileViewController: UIViewController {
             return
         }
         DispatchQueue.main.async {
-            usernameLabel.text = profile.name
-            userTagLabel.text = profile.loginName
-            bioLabel.text = profile.bio ?? "No Bio avalible"
+            self.usernameLabel.text = profile.name
+            self.userTagLabel.text = profile.loginName
+            self.bioLabel.text = profile.bio ?? "No Bio avalible"
         }
     }
+
     private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
-        else {return}
+        else { return }
         print("Загружаю и устанавливаю изображение пользователя")
         profilePhoto.kf.setImage(with: url,
                                  placeholder: UIImage(resource: .photo),
