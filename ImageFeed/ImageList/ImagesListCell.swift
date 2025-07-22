@@ -14,11 +14,11 @@ final class ImagesListCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupCell()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setupCell() {
         contentView.backgroundColor = UIColor(resource: .ypBlack)
         // imageView settings

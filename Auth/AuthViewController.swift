@@ -52,7 +52,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: .none)
         navigationItem.backBarButtonItem?.tintColor = UIColor(resource: .ypBlack)
     }
-    
+
     @objc private func showWebView(_ sender: Any) {
         let webViewViewController = WebViewViewController()
         webViewViewController.delegate = self

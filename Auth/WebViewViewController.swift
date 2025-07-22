@@ -10,7 +10,6 @@ private var progressView = UIProgressView()
 private var OAuthWebView = WKWebView()
 
 final class WebViewViewController: UIViewController {
-   
     private var estimatedProgressObservation: NSKeyValueObservation?
 
     weak var delegate: WebViewViewControllerDelegate?
@@ -23,37 +22,36 @@ final class WebViewViewController: UIViewController {
         super.viewDidLoad()
         OAuthWebView.navigationDelegate = self
         estimatedProgressObservation = OAuthWebView.observe(\.estimatedProgress,
-                                                       options: [],
-                                                       changeHandler: { [weak self] _, _ in
-                                                           guard let self = self else { return }
-                                                           self.updateProgress()
-                                                       })
+                                                            options: [],
+                                                            changeHandler: { [weak self] _, _ in
+                                                                guard let self = self else { return }
+                                                                self.updateProgress()
+                                                            })
         setUpView()
         loadPage()
     }
-    
+
     private func setUpView() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         OAuthWebView.navigationDelegate = self
         progressView.progressTintColor = UIColor(resource: .ypBlack)
-        
+
         progressView.translatesAutoresizingMaskIntoConstraints = false
         OAuthWebView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(OAuthWebView)
         view.addSubview(progressView)
-        
+
         NSLayoutConstraint.activate([
             OAuthWebView.topAnchor.constraint(equalTo: view.topAnchor),
             OAuthWebView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             OAuthWebView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             OAuthWebView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
+
             progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         ])
-        
     }
 
     private func loadPage() {

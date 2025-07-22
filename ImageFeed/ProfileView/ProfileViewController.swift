@@ -1,9 +1,9 @@
+import Kingfisher
 import ProgressHUD
 import UIKit
-import Kingfisher
 
 private var profileImageServiceObserver: NSObjectProtocol?
-    
+
 // Create View`s
 
 private var profilePhoto = UIImageView()
@@ -18,7 +18,7 @@ final class ProfileViewController: UIViewController {
 
         configView()
         updateProfileData()
-        
+
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(forName: ProfileImageService.didChangeNotification,
                          object: nil,
@@ -29,8 +29,7 @@ final class ProfileViewController: UIViewController {
                 print("get notify")
             }
         updateAvatar()
-                         
-        
+
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -110,11 +109,12 @@ final class ProfileViewController: UIViewController {
             bioLabel.text = profile.bio ?? "No Bio avalible"
         }
     }
+
     private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
-        else {return}
+        else { return }
         print("Загружаю и устанавливаю изображение пользователя")
         profilePhoto.kf.setImage(with: url,
                                  placeholder: UIImage(resource: .photo),
