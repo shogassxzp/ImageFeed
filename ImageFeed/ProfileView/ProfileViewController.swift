@@ -20,7 +20,6 @@ private let logoutImage = UIImage(resource: .logout)
 final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        profilePhoto = UIImageView(image: profileImage)
         usernameLabel = UILabel()
         bioLabel = UILabel()
         userTagLabel = UILabel()
@@ -81,11 +80,13 @@ final class ProfileViewController: UIViewController {
     private func configView() {
         view.backgroundColor = .ypBlack
 
-        profilePhoto = UIImageView(image: profileImage)
         usernameLabel = UILabel()
         bioLabel = UILabel()
         userTagLabel = UILabel()
         logoutButton = UIButton(type: .system)
+        
+        profilePhoto.layer.masksToBounds = true
+        profilePhoto.layer.cornerRadius = 35
 
         usernameLabel.text = "username"
         usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
