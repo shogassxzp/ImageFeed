@@ -1,32 +1,50 @@
 import UIKit
 
+private var scrollView = UIScrollView()
+private var singleImageView = UIImageView()
+private var backButton = UIButton(type: .system)
+private var shareButton = UIButton(type: .system)
+private var imageHeight = NSLayoutConstraint()
+private var imageWidth = NSLayoutConstraint()
+
 final class SingleImageViewController: UIViewController {
     var image: UIImage? {
         didSet {
             guard isViewLoaded else { return }
-            SingleImageView.image = image
+            singleImageView.image = image
             if let image = image {
                 rescaleAndCenterImageInScrollView(image: image)
             }
         }
     }
 
-    @IBOutlet var imageHeight: NSLayoutConstraint!
-    @IBOutlet var imageWidth: NSLayoutConstraint!
+   // @IBOutlet var imageHeight: NSLayoutConstraint!
+    //@IBOutlet var imageWidth: NSLayoutConstraint!
 
-    @IBOutlet var scrollView: UIScrollView!
-    @IBOutlet private var SingleImageView: UIImageView!
+    //@IBOutlet var scrollView: UIScrollView!
+    //@IBOutlet private var SingleImageView: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScroll()
-        SingleImageView.image = image
+        singleImageView.image = image
         // Изменение констант размера, чтобы всё считалось правильно
-        imageWidth.constant = SingleImageView.image?.size.width ?? 0
-        imageHeight.constant = SingleImageView.image?.size.height ?? 0
+        imageWidth.constant = singleImageView.image?.size.width ?? 0
+        imageHeight.constant = singleImageView.image?.size.height ?? 0
         if let image = image {
             rescaleAndCenterImageInScrollView(image: image)
         }
+    }
+    func setupView() {
+        view.backgroundColor = UIColor(resource: .ypBlack)
+        scrollView.backgroundColor = UIColor(resource: .ypBlack)
+        
+        singleImageView.backgroundColor = UIColor(resource: .ypBlack)
+        singleImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        backButton.setImage(UIImage(resource: .backward), for: .normal)
+        
+        
     }
 
     func setupScroll() {
@@ -38,12 +56,12 @@ final class SingleImageViewController: UIViewController {
 
     // MARK: Buttons actions
 
-    @IBAction func BackButtonTap(_ sender: Any) {
+   @objc func BackButtonTap(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
     @IBAction func ShareButtonTap(_ sender: Any) {
-        guard let image = SingleImageView.image else {
+        guard let image = singleImageView.image else {
             return
         }
         let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
