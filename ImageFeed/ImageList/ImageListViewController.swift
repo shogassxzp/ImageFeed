@@ -17,6 +17,7 @@ final class ImageListViewController: UIViewController {
         photos = photosName.enumerated().map { _, name in
             let date = Date()
             return (image: name, date: date, isLiked: false)
+            
         }
     }
 
@@ -34,9 +35,9 @@ final class ImageListViewController: UIViewController {
         // Main cell settings setup
         cell.tableImageView.image = image
         cell.tableDataLabel.text = photoData.date.formattedDate()
-        let likeImage = photoData.isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+        let likeImage = photoData.isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
         let isLiked = indexPath.row % 2 == 0
-        let countedLike = isLiked ? UIImage(named: "No Active") : UIImage(named: "Active")
+        let countedLike = isLiked ? UIImage(resource: .noActive) : UIImage(resource: .active)
 
         cell.tableLikeButton.setImage(likeImage, for: .normal)
         cell.tableLikeButton.setImage(countedLike, for: .normal)
