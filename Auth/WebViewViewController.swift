@@ -10,8 +10,6 @@ final class WebViewViewController: UIViewController {
     @IBOutlet private var progressView: UIProgressView!
     @IBOutlet private var webView: WKWebView!
 
-    private var estimatedProgressObservation: NSKeyValueObservation?
-
     weak var delegate: WebViewViewControllerDelegate?
 
     enum WebViewConstants {
@@ -21,15 +19,16 @@ final class WebViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
-        estimatedProgressObservation = webView.observe(\.estimatedProgress,
-                                                       options: [],
-                                                       changeHandler: { [weak self] _, _ in
-                                                           guard let self = self else { return }
-                                                           self.updateProgress()
-                                                       })
-
         loadAuthView()
         setUpProgressView()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
     }
 
     private func loadAuthView() {
@@ -49,9 +48,19 @@ final class WebViewViewController: UIViewController {
     }
 
     private func setUpProgressView() {
-        progressView.progressTintColor = UIColor(resource: .ypBlack)
+        progressView.progressTintColor = UIColor(named: "YP Black")
     }
 
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey: Any]?,
+                               context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(WKWebView.estimatedProgress) {
+            updateProgress()
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
 
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
@@ -64,8 +73,6 @@ extension WebViewViewController: WKNavigationDelegate {
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
-            UIBlockingProgressHUD.show()
-            print("Lock user interactions in WebView")
             print("Код получен в WebView: \(code)")
             if let delegate = delegate {
                 print("Делегат WebView существует, передаём код")

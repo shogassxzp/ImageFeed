@@ -1,9 +1,5 @@
-import ProgressHUD
 import UIKit
-import Kingfisher
 
-private var profileImageServiceObserver: NSObjectProtocol?
-    
 // Create View`s
 
 private var profilePhoto = UIImageView()
@@ -14,12 +10,13 @@ private var logoutButton = UIButton()
 
 // Create images
 
-private let profileImage = UIImage(resource: .unsplash)
-private let logoutImage = UIImage(resource: .logout)
+private let profileImage = UIImage(named: "unsplash")
+private let logoutImage = UIImage(named: "Logout")
 
 final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+
         profilePhoto = UIImageView(image: profileImage)
         usernameLabel = UILabel()
         bioLabel = UILabel()
@@ -27,20 +24,7 @@ final class ProfileViewController: UIViewController {
         logoutButton = UIButton(type: .system)
 
         configView()
-        updateProfileData()
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(forName: ProfileImageService.didChangeNotification,
-                         object: nil,
-                         queue: .main,) {
-                [weak self] _ in
-                guard let self = self else { return }
-                print("loading")
-                self.updateAvatar()
-            }
-        updateAvatar()
-                         
-        
+
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +62,7 @@ final class ProfileViewController: UIViewController {
         ])
     }
 
-    private func configView() {
+    func configView() {
         view.backgroundColor = .ypBlack
 
         profilePhoto = UIImageView(image: profileImage)
@@ -101,32 +85,9 @@ final class ProfileViewController: UIViewController {
 
         profilePhoto.contentMode = .scaleToFill
         profilePhoto.tintColor = .gray
-        profilePhoto.kf.indicatorType = .activity
 
-        logoutButton.setImage(logoutImage, for: .normal)
+        logoutButton.setImage(logoutImage ?? nil, for: .normal)
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
-    }
-
-    private func updateProfileData() {
-        guard let profile = ProfileService.shared.profileData.self else {
-            print("Данные профиля отсутсвуют")
-            return
-        }
-        DispatchQueue.main.async {
-            usernameLabel.text = profile.name
-            userTagLabel.text = profile.loginName
-            bioLabel.text = profile.bio ?? "No Bio avalible"
-        }
-    }
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else {return}
-        print("Загружаю и устанавливаю изображение пользователя")
-        profilePhoto.kf.setImage(with: url,
-                                 placeholder: UIImage(resource: .photo),
-                                 options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))])
     }
 }
