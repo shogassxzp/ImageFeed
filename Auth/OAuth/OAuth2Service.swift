@@ -17,6 +17,10 @@ struct OAuthTokenResponse: Codable {
 final class OAuth2Service {
     static let shared = OAuth2Service()
 
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
+
     private init() {}
 
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
@@ -42,34 +46,36 @@ final class OAuth2Service {
     }
 
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Ошибка: Не удалось создать запрос")
-            completion(.failure(NetworkError.urlSessionError))
+        assert(Thread.isMainThread)
+
+        if task != nil, lastCode == code {
+            completion(.failure(NetworkError.invalidRequest))
             return
         }
 
-        let task = URLSession.shared.data(for: request) { result in
+        task?.cancel()
+        lastCode = code
+
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            print("Не удалось создать запрос")
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
+        task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponse, Error>) in
+            guard let self else { return }
+            self.task = nil
+            self.lastCode = nil
+
             switch result {
-            case let .success(data):
-                do {
-                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponse.self, from: data)
-                    print("Токен декодирован: \(tokenResponse.accessToken)")
-                    OAuth2TokenStorage.shared.token = tokenResponse.accessToken
-                    completion(.success(tokenResponse.accessToken))
-                } catch {
-                    print("Ошибка декодирования")
-                    completion(.failure(NetworkError.urlRequestError(error)))
-                }
+            case let .success(tokenResponse):
+                print("Токен декодирован \(tokenResponse.accessToken)")
+                OAuth2TokenStorage.shared.token = tokenResponse.accessToken
+                completion(.success(tokenResponse.accessToken))
             case let .failure(error):
-                if let networkError = error as? NetworkError, case let .httpStatusCode(statusCode) = networkError {
-                    print("Ошибка сервера: Код \(statusCode)")
-                } else {
-                    print("Сетевая ошибка")
-                }
+                print("Ошибка получения токена: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
-
-        task.resume()
+        task?.resume()
     }
 }
