@@ -1,18 +1,54 @@
 import UIKit
 
 final class SplashScreenViewController: UIViewController, AuthViewControllerDelegate {
-    private let showAuthenticationScreenSegueIdentifier = "showAuthView"
+    private var logoImageView = UIImageView()
+
+    private let storage = OAuth2TokenStorage.shared
+    private let profileService = ProfileService.shared
+    private let profilePhotoService = ProfileImageService.shared
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        checkAuthentication()
+    }
 
-        if OAuth2TokenStorage.shared.token != nil {
-            print("Токен есть, переключаюсь на TabBar")
-            switchToTabBarController()
-        } else {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+    }
+
+    private func setupView() {
+        logoImageView.image = UIImage(resource: .logoOfUnsplash)
+        view.backgroundColor = UIColor(resource: .ypBlack)
+        view.addSubview(logoImageView)
+
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 72),
+            logoImageView.heightAnchor.constraint(equalToConstant: 74),
+        ])
+    }
+
+    private func presentAuthView() {
+        let authViewController = AuthViewController()
+        authViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        UIBlockingProgressHUD.dismiss()
+        present(navigationController, animated: true)
+    }
+
+    private func checkAuthentication() {
+        guard let token = storage.token else {
             print("Токена нет, иду на авторизацию")
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            presentAuthView()
+            return
         }
+        print("Токен есть, загружаю данные профиля и перехожу на TabBar")
+        fetchProfile(token)
     }
 
     private func switchToTabBarController() {
@@ -20,32 +56,55 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
             assertionFailure("Неправильная настройка окна")
             return
         }
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = TabBarController()
 
         window.rootViewController = tabBarController
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            UIBlockingProgressHUD.dismiss()
+        }
     }
 }
 
 extension SplashScreenViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers.first as? AuthViewController
-            else {
-                assertionFailure("Failure to prepare for \(showAuthenticationScreenSegueIdentifier)")
-                return
-            }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
+    // When user logged in unsplash switch to TabBar and call fetchProfile
+    func didAuthenticate(_ vc: AuthViewController) {
+        print("didAuthenticate вызван, отпарвляю запрос на данные пользователя")
+        guard let token = storage.token else {
+            print("Ошибка с токеном")
+            return
         }
+        checkAuthentication()
+        print("Получаю данные пользователя")
     }
 
-    func didAuthenticate(_ vc: AuthViewController) {
-        print("didAuthenticate вызван, переключаюсь на TabBar")
-        switchToTabBarController()
-        vc.dismiss(animated: true)
+    // Fetch profile and switch to TabBar
+
+    private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case let .success(profile):
+                print("Профиль загружен,загружаю аватарку для \(profile.username)")
+                self.profilePhotoService.fetchProfileImageURL(username: profile.username) { result in
+                    DispatchQueue.main.async {
+                        UIBlockingProgressHUD.dismiss()
+                        switch result {
+                        case .success:
+                            self.switchToTabBarController()
+                        case .failure:
+                            print("Ошибка получения avatarURL")
+                            UIBlockingProgressHUD.dismiss()
+                        }
+                    }
+                }
+            case .failure:
+                DispatchQueue.main.async {
+                    UIBlockingProgressHUD.dismiss()
+                    print("Ошибка загрузки профиля")
+                }
+            }
+        }
     }
 }

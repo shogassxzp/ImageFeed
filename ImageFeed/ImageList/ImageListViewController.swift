@@ -3,9 +3,7 @@ import UIKit
 // MARK: Controller
 
 final class ImageListViewController: UIViewController {
-    @IBOutlet private var tableView: UITableView!
-
-    private let showSingleImageIdentifer = "ShowSingleImage"
+    private let tableView = UITableView()
     private let photosName: [String] = Array(0 ..< 20).map { "\($0)" }
     private var photos: [(image: String, date: Date, isLiked: Bool)] = []
 
@@ -18,6 +16,28 @@ final class ImageListViewController: UIViewController {
             let date = Date()
             return (image: name, date: date, isLiked: false)
         }
+        setupTableView()
+    }
+
+    private func setupTableView() {
+        view.backgroundColor = UIColor(resource: .ypBlack)
+        view.addSubview(tableView)
+
+        tableView.backgroundColor = UIColor(resource: .ypBlack)
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
+        tableView.separatorColor = UIColor(resource: .ypBlack)
+        tableView.dataSource = self
+        tableView.delegate = self
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
     }
 
     // MARK: Configure cell
@@ -34,36 +54,19 @@ final class ImageListViewController: UIViewController {
         // Main cell settings setup
         cell.tableImageView.image = image
         cell.tableDataLabel.text = photoData.date.formattedDate()
-        let likeImage = photoData.isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+        let liked = UIImage(resource: .active)
+        let likeImage = photoData.isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
         let isLiked = indexPath.row % 2 == 0
-        let countedLike = isLiked ? UIImage(named: "No Active") : UIImage(named: "Active")
+        let countedLike = isLiked ? UIImage(resource: .noActive) : UIImage(resource: .active)
 
         cell.tableLikeButton.setImage(likeImage, for: .normal)
         cell.tableLikeButton.setImage(countedLike, for: .normal)
+       
 
         cell.onLikeButtonTapped = { [weak self] in // Clouser from ListCell for change LikeButton and update cell
             guard let self = self else { return }
             self.photos[indexPath.row].isLiked.toggle()
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
-        }
-    }
-
-    // MARK: Segue to SingleImageView
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageIdentifer {
-            guard
-                let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
-            else {
-                assertionFailure("Invalid segue destination")
-                return
-            }
-
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
-        } else {
-            super.prepare(for: segue, sender: sender)
         }
     }
 }
@@ -90,7 +93,14 @@ extension ImageListViewController: UITableViewDataSource {
 
 extension ImageListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageIdentifer, sender: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
+        let photoData = photos[indexPath.row]
+        guard let image = UIImage(named: photoData.image) else { return }
+
+        let singleImageViewController = SingleImageViewController()
+        singleImageViewController.image = image
+        singleImageViewController.modalPresentationStyle = .fullScreen
+        present(singleImageViewController, animated: true, completion: nil)
     }
 
     // MARK: Dynamic height for image in cell
@@ -103,7 +113,7 @@ extension ImageListViewController: UITableViewDelegate {
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
         guard imageViewWidth > 0 else {
-            return 16 + 30 // Отступ + Высота gradientView
+            return 30 // Высота gradientView
         }
         let imageWidth = image.size.width
         guard imageWidth != 0 else {
