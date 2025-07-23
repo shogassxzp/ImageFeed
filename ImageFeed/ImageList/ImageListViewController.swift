@@ -3,9 +3,7 @@ import UIKit
 // MARK: Controller
 
 final class ImageListViewController: UIViewController {
-    @IBOutlet private var tableView: UITableView!
-
-    private let showSingleImageIdentifer = "ShowSingleImage"
+    private let tableView = UITableView()
     private let photosName: [String] = Array(0 ..< 20).map { "\($0)" }
     private var photos: [(image: String, date: Date, isLiked: Bool)] = []
 
@@ -17,8 +15,28 @@ final class ImageListViewController: UIViewController {
         photos = photosName.enumerated().map { _, name in
             let date = Date()
             return (image: name, date: date, isLiked: false)
-            
         }
+        setupTableView()
+    }
+
+    private func setupTableView() {
+        view.backgroundColor = UIColor(resource: .ypBlack)
+        view.addSubview(tableView)
+
+        tableView.backgroundColor = UIColor(resource: .ypBlack)
+        tableView.separatorStyle = .none
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
+        tableView.dataSource = self
+        tableView.delegate = self
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
     }
 
     // MARK: Configure cell
@@ -48,25 +66,6 @@ final class ImageListViewController: UIViewController {
             self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
     }
-
-    // MARK: Segue to SingleImageView
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageIdentifer {
-            guard
-                let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
-            else {
-                assertionFailure("Invalid segue destination")
-                return
-            }
-
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
 }
 
 // MARK: Extensions
@@ -91,7 +90,14 @@ extension ImageListViewController: UITableViewDataSource {
 
 extension ImageListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageIdentifer, sender: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
+        let photoData = photos[indexPath.row]
+        guard let image = UIImage(named: photoData.image) else { return }
+
+        let singleImageViewController = SingleImageViewController()
+        singleImageViewController.image = image
+        singleImageViewController.modalPresentationStyle = .fullScreen
+        present(singleImageViewController, animated: true, completion: nil)
     }
 
     // MARK: Dynamic height for image in cell
@@ -104,7 +110,7 @@ extension ImageListViewController: UITableViewDelegate {
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
         guard imageViewWidth > 0 else {
-            return 16 + 30 // Отступ + Высота gradientView
+            return 30 // Высота gradientView
         }
         let imageWidth = image.size.width
         guard imageWidth != 0 else {

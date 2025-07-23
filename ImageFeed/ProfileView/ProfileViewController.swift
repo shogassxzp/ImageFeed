@@ -2,18 +2,20 @@ import Kingfisher
 import ProgressHUD
 import UIKit
 
+private var profileImageServiceObserver: NSObjectProtocol?
+
+// Create View`s
+
+private var profilePhoto = UIImageView()
+private var usernameLabel = UILabel()
+private var bioLabel = UILabel()
+private var userTagLabel = UILabel()
+private var logoutButton = UIButton()
+
 final class ProfileViewController: UIViewController {
-    private var profileImageServiceObserver: NSObjectProtocol?
-    
-    private var profilePhoto = UIImageView()
-    private var usernameLabel = UILabel()
-    private var bioLabel = UILabel()
-    private var userTagLabel = UILabel()
-    private var logoutButton = UIButton()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         configView()
         updateProfileData()
 
@@ -24,41 +26,10 @@ final class ProfileViewController: UIViewController {
                 [weak self] _ in
                 guard let self = self else { return }
                 self.updateAvatar()
+                print("get notify")
             }
         updateAvatar()
-    }
 
-    private func configView() {
-        view.backgroundColor = .ypBlack
-
-        usernameLabel = UILabel()
-        bioLabel = UILabel()
-        userTagLabel = UILabel()
-        logoutButton = UIButton(type: .system)
-
-        profilePhoto.layer.masksToBounds = true
-        profilePhoto.layer.cornerRadius = 35
-
-        usernameLabel.text = "username"
-        usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        usernameLabel.textColor = .ypWhite
-
-        userTagLabel.text = "@usernametag"
-        userTagLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        userTagLabel.textColor = .ypGray
-
-        bioLabel.text = "bio"
-        bioLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        bioLabel.textColor = .ypWhite
-
-        profilePhoto.contentMode = .scaleToFill
-        profilePhoto.tintColor = .gray
-        profilePhoto.kf.indicatorType = .activity
-
-        logoutButton.setImage(UIImage(resource: .logout), for: .normal)
-        logoutButton.tintColor = .ypRed
-        logoutButton.contentHorizontalAlignment = .right
-        
         // Disable mask
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         userTagLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -94,8 +65,37 @@ final class ProfileViewController: UIViewController {
             logoutButton.widthAnchor.constraint(equalToConstant: 44),
             logoutButton.heightAnchor.constraint(equalToConstant: 44),
         ])
-        
-        
+    }
+
+    private func configView() {
+        view.backgroundColor = .ypBlack
+
+        profilePhoto.layer.masksToBounds = true
+        profilePhoto.layer.cornerRadius = 35
+        usernameLabel = UILabel()
+        bioLabel = UILabel()
+        userTagLabel = UILabel()
+        logoutButton = UIButton(type: .system)
+
+        usernameLabel.text = "username"
+        usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        usernameLabel.textColor = .ypWhite
+
+        userTagLabel.text = "@usernametag"
+        userTagLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        userTagLabel.textColor = .ypGray
+
+        bioLabel.text = "bio"
+        bioLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        bioLabel.textColor = .ypWhite
+
+        profilePhoto.contentMode = .scaleToFill
+        profilePhoto.tintColor = .gray
+        profilePhoto.kf.indicatorType = .activity
+
+        logoutButton.setImage(UIImage(resource: .logout), for: .normal)
+        logoutButton.tintColor = .ypRed
+        logoutButton.contentHorizontalAlignment = .right
     }
 
     private func updateProfileData() {
@@ -104,9 +104,9 @@ final class ProfileViewController: UIViewController {
             return
         }
         DispatchQueue.main.async {
-            self.usernameLabel.text = profile.name
-            self.userTagLabel.text = profile.loginName
-            self.bioLabel.text = profile.bio ?? "No Bio avalible"
+            usernameLabel.text = profile.name
+            userTagLabel.text = profile.loginName
+            bioLabel.text = profile.bio ?? "No Bio avalible"
         }
     }
 

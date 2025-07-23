@@ -1,35 +1,94 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    private var scrollView = UIScrollView()
+    private var singleImageView = UIImageView()
+    private var backButton = UIButton(type: .system)
+    private var shareButton = UIButton(type: .system)
+    private var imageHeight = NSLayoutConstraint()
+    private var imageWidth = NSLayoutConstraint()
+
     var image: UIImage? {
         didSet {
-            guard isViewLoaded else { return }
-            SingleImageView.image = image
-            if let image = image {
+            guard let image else { return }
+            if isViewLoaded {
+                singleImageView.image = image
+                imageWidth.constant = image.size.width
+                imageHeight.constant = image.size.height
                 rescaleAndCenterImageInScrollView(image: image)
             }
         }
     }
 
-    @IBOutlet var imageHeight: NSLayoutConstraint!
-    @IBOutlet var imageWidth: NSLayoutConstraint!
-
-    @IBOutlet var scrollView: UIScrollView!
-    @IBOutlet private var SingleImageView: UIImageView!
-
     override func viewDidLoad() {
         super.viewDidLoad()
+        super.viewDidLoad()
+        setupView()
         setupScroll()
-        SingleImageView.image = image
-        // Изменение констант размера, чтобы всё считалось правильно
-        imageWidth.constant = SingleImageView.image?.size.width ?? 0
-        imageHeight.constant = SingleImageView.image?.size.height ?? 0
-        if let image = image {
+        if let image = image, singleImageView.image == nil {
+            singleImageView.image = image
+            imageWidth.constant = image.size.width
+            imageHeight.constant = image.size.height
             rescaleAndCenterImageInScrollView(image: image)
         }
+        print("SingleImageViewController: viewDidLoad, image: \(singleImageView.image != nil)")
+    }
+
+    private func setupView() {
+        view.backgroundColor = UIColor(resource: .ypBlack)
+
+        scrollView.backgroundColor = UIColor(resource: .ypBlack)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+
+        singleImageView.backgroundColor = UIColor(resource: .ypBlack)
+        singleImageView.contentMode = .scaleAspectFit
+        singleImageView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(singleImageView)
+
+        backButton.setImage(UIImage(resource: .backward), for: .normal)
+        backButton.tintColor = UIColor(resource: .ypWhite)
+        backButton.contentHorizontalAlignment = .left
+        backButton.addTarget(self, action: #selector(backButtonTap), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backButton)
+
+        shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        shareButton.tintColor = UIColor(resource: .ypWhite)
+        shareButton.addTarget(self, action: #selector(shareButtonTap), for: .touchUpInside)
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(shareButton)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            singleImageView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            singleImageView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            singleImageView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            singleImageView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            backButton.widthAnchor.constraint(equalToConstant: 130),
+            backButton.heightAnchor.constraint(equalToConstant: 42),
+
+            shareButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            shareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            shareButton.widthAnchor.constraint(equalToConstant: 50),
+            shareButton.heightAnchor.constraint(equalToConstant: 50),
+        ])
+
+        imageWidth = singleImageView.widthAnchor.constraint(equalToConstant: 0)
+        imageHeight = singleImageView.heightAnchor.constraint(equalToConstant: 0)
+        imageWidth.isActive = true
+        imageHeight.isActive = true
     }
 
     func setupScroll() {
+        scrollView.delegate = self
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         scrollView.showsVerticalScrollIndicator = false
@@ -38,12 +97,12 @@ final class SingleImageViewController: UIViewController {
 
     // MARK: Buttons actions
 
-    @IBAction func BackButtonTap(_ sender: Any) {
+    @objc func backButtonTap(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
-    @IBAction func ShareButtonTap(_ sender: Any) {
-        guard let image = SingleImageView.image else {
+    @objc func shareButtonTap(_ sender: Any) {
+        guard let image = singleImageView.image else {
             return
         }
         let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
@@ -98,6 +157,6 @@ final class SingleImageViewController: UIViewController {
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return SingleImageView
+        return singleImageView
     }
 }
