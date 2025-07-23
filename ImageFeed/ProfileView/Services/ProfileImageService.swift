@@ -30,16 +30,6 @@ final class ProfileImageService {
         }
     }
 
-    private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {
-        guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else {
-            return nil
-        }
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
-        return request
-    }
-
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         task?.cancel()
 
@@ -79,6 +69,16 @@ final class ProfileImageService {
             }
         }
         task?.resume()
+    }
+
+    private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {
+        guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else {
+            return nil
+        }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        return request
     }
 }
 

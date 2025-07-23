@@ -1,9 +1,10 @@
 import UIKit
 
-private let imageListViewController = ImageListViewController()
-private let profileViewController = ProfileViewController()
 
 final class TabBarController: UITabBarController {
+    private let imageListViewController = ImageListViewController()
+    private let profileViewController = ProfileViewController()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBar()

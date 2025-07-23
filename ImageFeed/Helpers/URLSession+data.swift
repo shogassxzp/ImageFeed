@@ -57,12 +57,4 @@ extension URLSession {
             }
         }
     }
-
-    private func performMainTread<T>(_ comletion: @escaping (Result<T, NetworkError>) -> Void) -> (Result<T, NetworkError>) -> Void {
-        { result in
-            DispatchQueue.main.async {
-                comletion(result)
-            }
-        }
-    }
 }

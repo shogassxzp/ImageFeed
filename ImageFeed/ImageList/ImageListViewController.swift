@@ -28,6 +28,7 @@ final class ImageListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
 
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
+        tableView.separatorColor = UIColor(resource: .ypBlack)
         tableView.dataSource = self
         tableView.delegate = self
 
@@ -53,12 +54,14 @@ final class ImageListViewController: UIViewController {
         // Main cell settings setup
         cell.tableImageView.image = image
         cell.tableDataLabel.text = photoData.date.formattedDate()
+        let liked = UIImage(resource: .active)
         let likeImage = photoData.isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
         let isLiked = indexPath.row % 2 == 0
         let countedLike = isLiked ? UIImage(resource: .noActive) : UIImage(resource: .active)
 
         cell.tableLikeButton.setImage(likeImage, for: .normal)
         cell.tableLikeButton.setImage(countedLike, for: .normal)
+       
 
         cell.onLikeButtonTapped = { [weak self] in // Clouser from ListCell for change LikeButton and update cell
             guard let self = self else { return }

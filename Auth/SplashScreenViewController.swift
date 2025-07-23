@@ -27,13 +27,21 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
         NSLayoutConstraint.activate([
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            logoImageView.widthAnchor.constraint(equalToConstant: 80),
-            logoImageView.heightAnchor.constraint(equalToConstant: 80),
+            logoImageView.widthAnchor.constraint(equalToConstant: 72),
+            logoImageView.heightAnchor.constraint(equalToConstant: 74),
         ])
     }
 
+    private func presentAuthView() {
+        let authViewController = AuthViewController()
+        authViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        UIBlockingProgressHUD.dismiss()
+        present(navigationController, animated: true)
+    }
+
     private func checkAuthentication() {
-        UIBlockingProgressHUD.show()
         guard let token = storage.token else {
             print("Токена нет, иду на авторизацию")
             presentAuthView()
@@ -43,25 +51,12 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
         fetchProfile(token)
     }
 
-    private func presentAuthView() {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
-            assertionFailure("Не удалось инициализировать AuthViewController")
-            return
-        }
-        authViewController.delegate = self
-        authViewController.modalPresentationStyle = .fullScreen
-        UIBlockingProgressHUD.dismiss()
-        present(authViewController, animated: true)
-    }
-
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Неправильная настройка окна")
             return
         }
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = TabBarController()
 
         window.rootViewController = tabBarController
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -73,19 +68,19 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
 extension SplashScreenViewController {
     // When user logged in unsplash switch to TabBar and call fetchProfile
     func didAuthenticate(_ vc: AuthViewController) {
-        UIBlockingProgressHUD.show()
         print("didAuthenticate вызван, отпарвляю запрос на данные пользователя")
         guard let token = storage.token else {
             print("Ошибка с токеном")
             return
         }
-        fetchProfile(token)
+        checkAuthentication()
         print("Получаю данные пользователя")
     }
 
     // Fetch profile and switch to TabBar
 
     private func fetchProfile(_ token: String) {
+        UIBlockingProgressHUD.show()
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
 
@@ -96,15 +91,15 @@ extension SplashScreenViewController {
                     DispatchQueue.main.async {
                         UIBlockingProgressHUD.dismiss()
                         switch result {
-                        case let .success(avatarURL):
+                        case .success:
                             self.switchToTabBarController()
-                        case let .failure(error):
-                            UIBlockingProgressHUD.dismiss()
+                        case .failure:
                             print("Ошибка получения avatarURL")
+                            UIBlockingProgressHUD.dismiss()
                         }
                     }
                 }
-            case let .failure(error):
+            case .failure:
                 DispatchQueue.main.async {
                     UIBlockingProgressHUD.dismiss()
                     print("Ошибка загрузки профиля")

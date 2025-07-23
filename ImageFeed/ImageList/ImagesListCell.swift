@@ -31,6 +31,7 @@ final class ImagesListCell: UITableViewCell {
         // gradientView settings
         gradientView.layer.masksToBounds = true
         gradientView.layer.cornerRadius = 16
+        gradientView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(gradientView)
         // dataLabel settings
         tableDataLabel.font = .systemFont(ofSize: 13)
@@ -39,9 +40,13 @@ final class ImagesListCell: UITableViewCell {
         gradientView.addSubview(tableDataLabel)
         // likeButton settings
         tableLikeButton.setImage(UIImage(resource: .noActive), for: .normal)
-        tableLikeButton.tintColor = .white
+        tableLikeButton.tintColor = .clear
         tableLikeButton.addTarget(self, action: #selector(likeButtonClick), for: .touchUpInside)
+        tableLikeButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(tableLikeButton)
+        //
+        contentView.sendSubviewToBack(tableImageView)
+        
         // layout
         NSLayoutConstraint.activate([
             tableImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -49,12 +54,16 @@ final class ImagesListCell: UITableViewCell {
             tableImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             tableImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
 
-            gradientView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            gradientView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            gradientView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            gradientView.bottomAnchor.constraint(equalTo: tableImageView.bottomAnchor),
+            gradientView.leadingAnchor.constraint(equalTo: tableImageView.leadingAnchor),
+            gradientView.trailingAnchor.constraint(equalTo: tableImageView.trailingAnchor),
+            gradientView.heightAnchor.constraint(equalToConstant: 30),
+            
+            tableDataLabel.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor,constant: 10),
+            tableDataLabel.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor, constant: -5),
 
-            tableLikeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -10),
-            tableLikeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            tableLikeButton.topAnchor.constraint(equalTo: tableImageView.topAnchor, constant: 10),
+            tableLikeButton.trailingAnchor.constraint(equalTo: tableImageView.trailingAnchor, constant: -10),
         ])
         setupGradient()
     }
@@ -82,6 +91,7 @@ final class ImagesListCell: UITableViewCell {
     }
 
     @objc func likeButtonClick(_ sender: Any) {
+        
         onLikeButtonTapped?()
     }
 }

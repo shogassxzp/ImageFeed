@@ -31,7 +31,6 @@ final class SingleImageViewController: UIViewController {
             imageHeight.constant = image.size.height
             rescaleAndCenterImageInScrollView(image: image)
         }
-        print("SingleImageViewController: viewDidLoad, image: \(singleImageView.image != nil)")
     }
 
     private func setupView() {
@@ -55,6 +54,9 @@ final class SingleImageViewController: UIViewController {
 
         shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
+        shareButton.backgroundColor = UIColor(resource: .ypBlack)
+        shareButton.layer.masksToBounds = true
+        shareButton.layer.cornerRadius = 25
         shareButton.addTarget(self, action: #selector(shareButtonTap), for: .touchUpInside)
         shareButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(shareButton)
