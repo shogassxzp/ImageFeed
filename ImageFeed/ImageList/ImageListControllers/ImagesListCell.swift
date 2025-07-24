@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     var tableLikeButton = UIButton(type: .system)
@@ -46,7 +47,7 @@ final class ImagesListCell: UITableViewCell {
         contentView.addSubview(tableLikeButton)
         //
         contentView.sendSubviewToBack(tableImageView)
-        
+
         // layout
         NSLayoutConstraint.activate([
             tableImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -58,8 +59,8 @@ final class ImagesListCell: UITableViewCell {
             gradientView.leadingAnchor.constraint(equalTo: tableImageView.leadingAnchor),
             gradientView.trailingAnchor.constraint(equalTo: tableImageView.trailingAnchor),
             gradientView.heightAnchor.constraint(equalToConstant: 30),
-            
-            tableDataLabel.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor,constant: 10),
+
+            tableDataLabel.leadingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 10),
             tableDataLabel.bottomAnchor.constraint(equalTo: gradientView.bottomAnchor, constant: -5),
 
             tableLikeButton.topAnchor.constraint(equalTo: tableImageView.topAnchor, constant: 10),
@@ -68,6 +69,26 @@ final class ImagesListCell: UITableViewCell {
         setupGradient()
     }
 
+        func configure(with photo: ImageListService.Photo, tableView: UITableView, indexPath: IndexPath) {
+        tableImageView.kf.indicatorType = .activity
+        tableImageView.kf.setImage(
+            with: URL(string: photo.thumbImageURL),
+            placeholder: UIImage(resource: ._0),
+        ) {[weak self, weak tableView] result in
+            guard let self, let tableView else { return }
+            
+            switch result {
+            case .success:
+                print("Изображение загружено, устанавливаю")
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            case .failure(let error):
+                print("Ошибка загрузки изображения \(error)")
+            }
+        }
+        tableDataLabel.text = photo.createdAt?.formattedDate() ?? "Дата неизвестна"
+        tableLikeButton.setImage(UIImage(resource: photo.isLiked ? .active : .noActive), for: .normal)
+    }
+    
     // MARK: Setup gradient
 
     private func setupGradient() {
@@ -91,7 +112,6 @@ final class ImagesListCell: UITableViewCell {
     }
 
     @objc func likeButtonClick(_ sender: Any) {
-        
         onLikeButtonTapped?()
     }
 }
@@ -99,8 +119,10 @@ final class ImagesListCell: UITableViewCell {
 extension ImagesListCell {
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        //TODO: cancel download image befor reuse cell
+        tableImageView.kf.cancelDownloadTask()
+        tableImageView.image = nil
+        tableDataLabel.text = nil
+        tableLikeButton.setImage(nil, for: .normal)
         // tableView.reloadRows(at: [indexPath], with: .automatic) reload row
     }
 }

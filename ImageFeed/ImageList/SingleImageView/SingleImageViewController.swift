@@ -7,6 +7,7 @@ final class SingleImageViewController: UIViewController {
     private var shareButton = UIButton(type: .system)
     private var imageHeight = NSLayoutConstraint()
     private var imageWidth = NSLayoutConstraint()
+    var imageURL = URL(" ")
 
     var image: UIImage? {
         didSet {
@@ -52,7 +53,7 @@ final class SingleImageViewController: UIViewController {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
 
-        shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        shareButton.setImage(UIImage(resource: .sharing), for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
         shareButton.backgroundColor = UIColor(resource: .ypBlack)
         shareButton.layer.masksToBounds = true
