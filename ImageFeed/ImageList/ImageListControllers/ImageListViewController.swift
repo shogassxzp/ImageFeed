@@ -68,6 +68,7 @@ extension ImageListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         let photo = photos[indexPath.row]
+        cell.delegate = self
         cell.configure(with: photo, tableView: tableView, indexPath: indexPath)
         return cell
     }
@@ -98,5 +99,25 @@ extension ImageListViewController: UITableViewDelegate {
         let scale = imageViewWidth / photo.size.width
         let cellHeight = photo.size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
+    }
+}
+extension ImageListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        listService.changeLike(photoId: photo.id, isLike: !photo.isLike) { result in
+            switch result {
+            case .success:
+                self.photos = self.listService.photos
+                cell.likeButtonClicked(self.photos[indexPath.row].isLike)
+                UIBlockingProgressHUD.dismiss()
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
+                //TODO: Сделать алёрт с ошибкой
+            }
+            
+        }
     }
 }
