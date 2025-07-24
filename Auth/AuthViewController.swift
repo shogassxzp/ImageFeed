@@ -62,7 +62,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     }
 
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        print("Получен код в AuthViewController: \(code)")
+        print("[AuthViewController]: Получен код в AuthViewController: \(code)")
         UIBlockingProgressHUD.show()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
@@ -71,18 +71,18 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token
 
-                print("Токен получен: \(token), вызываем делегата")
+                print("[AuthViewController]: Токен получен: \(token), вызываем делегата")
                 if self.delegate != nil {
-                    print("Делегат Auth существует, вызываем didAuthenticate")
+                    print("[AuthViewController]: Делегат Auth существует, вызываем didAuthenticate")
                     self.delegate?.didAuthenticate(self)
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    print("Делегат Auth не установлен!")
+                    print("[AuthViewController]: Делегат Auth не установлен!")
                     self.navigationController?.popViewController(animated: true)
                 }
             case let .failure(error):
                 AlertPresenter.showErrorAlert(on: self)
-                print("Ошибка: \(error.localizedDescription)")
+                print("[AuthViewController]: Ошибка \(error.localizedDescription)")
             }
         }
     }

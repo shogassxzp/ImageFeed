@@ -43,17 +43,17 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
 
     private func checkAuthentication() {
         guard let token = storage.token else {
-            print("Токена нет, иду на авторизацию")
+            print("[SplashScreenViewController]: Токена нет, иду на авторизацию")
             presentAuthView()
             return
         }
-        print("Токен есть, загружаю данные профиля и перехожу на TabBar")
+        print("[SplashScreenViewController]: Токен есть, загружаю данные профиля и перехожу на TabBar")
         fetchProfile(token)
     }
 
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Неправильная настройка окна")
+            assertionFailure("[SplashScreenViewController]: Неправильная настройка окна")
             return
         }
         let tabBarController = TabBarController()
@@ -68,13 +68,13 @@ final class SplashScreenViewController: UIViewController, AuthViewControllerDele
 extension SplashScreenViewController {
     // When user logged in unsplash switch to TabBar and call fetchProfile
     func didAuthenticate(_ vc: AuthViewController) {
-        print("didAuthenticate вызван, отпарвляю запрос на данные пользователя")
-        guard let token = storage.token else {
-            print("Ошибка с токеном")
+        print("[SplashScreenViewController]: didAuthenticate вызван, отпарвляю запрос на данные пользователя")
+        guard storage.token != nil else {
+            print("[SplashScreenViewController]: Ошибка с токеном")
             return
         }
         checkAuthentication()
-        print("Получаю данные пользователя")
+        print("[SplashScreenViewController]: Получаю данные пользователя")
     }
 
     // Fetch profile and switch to TabBar
@@ -86,7 +86,7 @@ extension SplashScreenViewController {
 
             switch result {
             case let .success(profile):
-                print("Профиль загружен,загружаю аватарку для \(profile.username)")
+                print("[SplashScreenViewController]: Профиль загружен,загружаю аватарку для \(profile.username)")
                 self.profilePhotoService.fetchProfileImageURL(username: profile.username) { result in
                     DispatchQueue.main.async {
                         UIBlockingProgressHUD.dismiss()
@@ -94,7 +94,7 @@ extension SplashScreenViewController {
                         case .success:
                             self.switchToTabBarController()
                         case .failure:
-                            print("Ошибка получения avatarURL")
+                            print("[SplashScreenViewController]: Ошибка получения avatarURL")
                             UIBlockingProgressHUD.dismiss()
                         }
                     }
@@ -102,7 +102,7 @@ extension SplashScreenViewController {
             case .failure:
                 DispatchQueue.main.async {
                     UIBlockingProgressHUD.dismiss()
-                    print("Ошибка загрузки профиля")
+                    print("[SplashScreenViewController]: Ошибка загрузки профиля")
                 }
             }
         }

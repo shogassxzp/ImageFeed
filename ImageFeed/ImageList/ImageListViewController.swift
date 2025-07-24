@@ -6,10 +6,11 @@ final class ImageListViewController: UIViewController {
     private let tableView = UITableView()
     private let photosName: [String] = Array(0 ..< 20).map { "\($0)" }
     private var photos: [(image: String, date: Date, isLiked: Bool)] = []
+    private let listService = ImageListService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        listService.fetchPhotosNextPage()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
 
         photos = photosName.enumerated().map { _, name in
@@ -38,11 +39,19 @@ final class ImageListViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+        
     }
-
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath) {
+        
+    }
+    
     // MARK: Configure cell
 
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+  private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photoData = photos[indexPath.row]
         // Placeholder if we cant create cell from our data
         guard let image = UIImage(named: photoData.image) else {
@@ -54,7 +63,6 @@ final class ImageListViewController: UIViewController {
         // Main cell settings setup
         cell.tableImageView.image = image
         cell.tableDataLabel.text = photoData.date.formattedDate()
-        let liked = UIImage(resource: .active)
         let likeImage = photoData.isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
         let isLiked = indexPath.row % 2 == 0
         let countedLike = isLiked ? UIImage(resource: .noActive) : UIImage(resource: .active)

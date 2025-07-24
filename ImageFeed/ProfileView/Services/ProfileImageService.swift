@@ -24,10 +24,6 @@ final class ProfileImageService {
 
     struct UserResult: Codable {
         let profileImage: ProfileImageResult
-
-        enum CodingKeys: String, CodingKey {
-            case profileImage = "profile_image"
-        }
     }
 
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
@@ -36,7 +32,7 @@ final class ProfileImageService {
         guard let token = storage.token else {
             DispatchQueue.main.async {
                 let error = URLError(.userAuthenticationRequired)
-                print("Нет токена")
+                print("[ProfileImageService]: Нет токена")
                 completion(.failure(error))
             }
             return
@@ -45,7 +41,7 @@ final class ProfileImageService {
         guard let request = makeProfileImageRequest(token: token, username: username) else {
             DispatchQueue.main.async {
                 let error = URLError(.badURL)
-                print("Неверный URL")
+                print("[ProfileImageService]: Неверный URL")
                 completion(.failure(error))
             }
             return
@@ -57,14 +53,14 @@ final class ProfileImageService {
             case let .success(userResult):
                 let avatarURL = userResult.profileImage.small
                 self.avatarURL = avatarURL
-                print("Получен URL аватарки: \(avatarURL)")
+                print("[ProfileImageService]: Получен URL аватарки: \(avatarURL)")
                 completion(.success(avatarURL))
                 NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
                                                 object: self,
                                                 userInfo: ["URL": avatarURL]
                 )
             case let .failure(error):
-                print("Ошибка получения URL аватарки \(error.localizedDescription)")
+                print("[ProfileImageService]: Ошибка получения URL аватарки \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

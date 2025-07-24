@@ -10,15 +10,15 @@ final class OAuth2TokenStorage {
     var token: String? {
         get {
             let token = KeychainWrapper.standard.string(forKey: tokenKey)
-            print("Чтение токена: \(token ?? "nil")")
+            print("[OAuth2TokenStorage]: Чтение токена: \(token ?? "nil")")
             return token
         }
         set {
             if let newValue = newValue {
-                print("Сохранение токена: \(newValue)")
+                print("[OAuth2TokenStorage]: Сохранение токена: \(newValue)")
                 KeychainWrapper.standard.set(newValue, forKey: tokenKey)
             } else {
-                print("Удаление токена")
+                print("[OAuth2TokenStorage]: Удаление токена")
                 KeychainWrapper.standard.removeObject(forKey: tokenKey)
             }
         }

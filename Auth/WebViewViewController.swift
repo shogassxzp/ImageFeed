@@ -66,7 +66,7 @@ final class WebViewViewController: UIViewController {
         ]
         guard let url = urlComponents.url else { return }
         let request = URLRequest(url: url)
-        print("Загружаем запрос: \(request)")
+        print("[WebViewViewController]: Загружаем запрос: \(request)")
         OAuthWebView.load(request)
     }
 
@@ -82,12 +82,12 @@ extension WebViewViewController: WKNavigationDelegate {
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
             UIBlockingProgressHUD.show()
-            print("Код получен в WebView: \(code)")
+            print("[WebViewViewController]: Код получен в WebView: \(code)")
             if let delegate = delegate {
-                print("Делегат WebView существует, передаём код")
+                print("[WebViewViewController]: Делегат WebView существует, передаём код")
                 delegate.webViewViewController(self, didAuthenticateWithCode: code)
             } else {
-                print("Делегат WebView не установлен!")
+                print("[WebViewViewController]: Делегат WebView не установлен!")
             }
             decisionHandler(.cancel)
         } else {

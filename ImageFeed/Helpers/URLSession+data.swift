@@ -13,6 +13,7 @@ extension URLSession {
         completion: @escaping (Result<T, Error>) -> Void
     ) -> URLSessionTask {
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
 
         let task = dataTask(for: request) { (result: Result<Data, Error>) in
             switch result {
