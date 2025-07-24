@@ -9,6 +9,8 @@ final class ImageListService {
 
     private let urlSession = URLSession.shared
     private let storage = OAuth2TokenStorage.shared
+    
+    private init() {}
 
     struct PhotoResult: Codable {
         let id: String
@@ -91,3 +93,6 @@ final class ImageListService {
     }
 }
 
+extension ImageListService {
+    static let shared = ImageListService()
+}

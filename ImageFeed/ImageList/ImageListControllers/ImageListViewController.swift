@@ -5,18 +5,14 @@ import UIKit
 final class ImageListViewController: UIViewController {
     private let tableView = UITableView()
     private let photosName: [String] = Array(0 ..< 20).map { "\($0)" }
-    private var photos: [(image: String, date: Date, isLiked: Bool)] = []
-    private let listService = ImageListService()
-
+    private let listService = ImageListService.shared
+   // private var photos = [listService.photos] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        listService.fetchPhotosNextPage()
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        
+        
 
-        photos = photosName.enumerated().map { _, name in
-            let date = Date()
-            return (image: name, date: date, isLiked: false)
-        }
+        
         setupTableView()
     }
 
@@ -32,6 +28,7 @@ final class ImageListViewController: UIViewController {
         tableView.separatorColor = UIColor(resource: .ypBlack)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -39,19 +36,33 @@ final class ImageListViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
     }
-    
+
+    func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = listService.photos.count
+
+        photos = listService.photos
+
+        if oldCount != newCount {
+            tableView.performBatchUpdates {
+                let indexPaths = (oldCount ..< newCount).map { i in
+                    IndexPath(row: i, section: 0)
+                }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } completion: { _ in }
+        }
+    }
+
     func tableView(
         _ tableView: UITableView,
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath) {
-        
     }
-    
+
     // MARK: Configure cell
 
-  private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let photoData = photos[indexPath.row]
         // Placeholder if we cant create cell from our data
         guard let image = UIImage(named: photoData.image) else {
@@ -66,10 +77,6 @@ final class ImageListViewController: UIViewController {
         let likeImage = photoData.isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
         let isLiked = indexPath.row % 2 == 0
         let countedLike = isLiked ? UIImage(resource: .noActive) : UIImage(resource: .active)
-
-        cell.tableLikeButton.setImage(likeImage, for: .normal)
-        cell.tableLikeButton.setImage(countedLike, for: .normal)
-       
 
         cell.onLikeButtonTapped = { [weak self] in // Clouser from ListCell for change LikeButton and update cell
             guard let self = self else { return }

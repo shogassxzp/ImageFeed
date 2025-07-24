@@ -95,3 +95,12 @@ final class ImagesListCell: UITableViewCell {
         onLikeButtonTapped?()
     }
 }
+
+extension ImagesListCell {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        //TODO: cancel download image befor reuse cell
+        // tableView.reloadRows(at: [indexPath], with: .automatic) reload row
+    }
+}
