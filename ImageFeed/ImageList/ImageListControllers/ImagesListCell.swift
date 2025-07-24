@@ -41,7 +41,6 @@ final class ImagesListCell: UITableViewCell {
         gradientView.addSubview(tableDataLabel)
         // likeButton settings
         tableLikeButton.setImage(UIImage(resource: .noActive), for: .normal)
-        tableLikeButton.tintColor = .clear
         tableLikeButton.addTarget(self, action: #selector(likeButtonClick), for: .touchUpInside)
         tableLikeButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(tableLikeButton)
@@ -86,7 +85,7 @@ final class ImagesListCell: UITableViewCell {
             }
         }
         tableDataLabel.text = photo.createdAt?.formattedDate() ?? "Дата неизвестна"
-        tableLikeButton.setImage(UIImage(resource: photo.isLiked ? .active : .noActive), for: .normal)
+            tableLikeButton.setImage(UIImage(resource: photo.isLiked ? .active : .noActive), for: .normal)
     }
     
     // MARK: Setup gradient

@@ -5,6 +5,7 @@ enum NetworkError: Error {
     case urlRequestError(Error)
     case urlSessionError
     case invalidRequest
+    case alreadyInProgress
 }
 
 extension URLSession {
