@@ -2,6 +2,7 @@ import Foundation
 
 final class ImageListService {
     static let didChangeNotification = Notification.Name(rawValue: "ImageListServiceDidChange")
+    static let likeChangedNotification = Notification.Name(rawValue: "likeSucess")
 
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
@@ -115,7 +116,7 @@ final class ImageListService {
                 return
             }
             
-            print("[ImageListService]: Отправляем \(isLike ? "POST" : "DELETE") запрос для фото \(photoId)")
+        print("[ImageListService]: Отправляем \(isLike ? "POST" : "DELETE") запрос для фото \(photoId)\(Date())")
             task = urlSession.dataTask(with: request) { [weak self] data, response, error in
                 guard let self else { return }
                 self.task = nil
@@ -164,10 +165,13 @@ final class ImageListService {
                                 isLike: photoResult.likedByUser
                             )
                             self.photos[index] = newPhoto
+                            NotificationCenter.default.post(name: ImageListService.likeChangedNotification,
+                                                            object: nil)
                             completion(.success(()))
                         } else {
                             print("[ImageListService]: Фото \(photoId) не найдено в массиве photos")
                             completion(.failure(NetworkError.invalidRequest))
+                            
                         }
                     }
                 } catch {

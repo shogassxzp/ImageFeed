@@ -15,6 +15,7 @@ final class ImageListViewController: UIViewController {
             queue: .main)
         { [self]_ in updateTableViewAnimated() }
         listService.fetchPhotosNextPage()
+        
     }
 
     private func setupTableView() {
@@ -110,8 +111,6 @@ extension ImageListViewController: ImagesListCellDelegate {
         listService.changeLike(photoId: photo.id, isLike: !photo.isLike) { result in
             switch result {
             case .success:
-                self.photos = self.listService.photos
-                cell.likeButtonClicked(self.photos[indexPath.row].isLike)
                 UIBlockingProgressHUD.dismiss()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
