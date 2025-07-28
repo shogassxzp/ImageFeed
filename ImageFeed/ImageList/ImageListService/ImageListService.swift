@@ -37,7 +37,7 @@ final class ImageListService {
         let createdAt: Date?
         let welcomeDescription: String?
         let thumbImageURL: String
-        let largeImageURL: String
+        let fullImageURL: String
         let isLike: Bool
 
         // for decoder
@@ -47,18 +47,18 @@ final class ImageListService {
             createdAt = result.createdAt.flatMap { ISO8601DateFormatter().date(from: $0) }
             welcomeDescription = result.description
             thumbImageURL = result.urls.thumb
-            largeImageURL = result.urls.regular
+            fullImageURL = result.urls.full
             isLike = result.likedByUser
         }
 
         // for local changes
-        init(id: String, size: CGSize, createdAt: Date?, welcomeDescription: String?, thumbImageURL: String, largeImageURL: String, isLike: Bool) {
+        init(id: String, size: CGSize, createdAt: Date?, welcomeDescription: String?, thumbImageURL: String, fullImageURL: String, isLike: Bool) {
             self.id = id
             self.size = size
             self.createdAt = createdAt
             self.welcomeDescription = welcomeDescription
             self.thumbImageURL = thumbImageURL
-            self.largeImageURL = largeImageURL
+            self.fullImageURL = fullImageURL
             self.isLike = isLike
         }
     }
@@ -161,7 +161,7 @@ final class ImageListService {
                                 createdAt: photo.createdAt,
                                 welcomeDescription: photo.welcomeDescription,
                                 thumbImageURL: photo.thumbImageURL,
-                                largeImageURL: photo.largeImageURL,
+                                fullImageURL: photo.fullImageURL,
                                 isLike: photoResult.likedByUser
                             )
                             self.photos[index] = newPhoto

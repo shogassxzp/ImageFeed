@@ -1,13 +1,15 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
+    private var photos: [ImageListService.Photo] = []
     private var scrollView = UIScrollView()
     private var singleImageView = UIImageView()
     private var backButton = UIButton(type: .system)
     private var shareButton = UIButton(type: .system)
     private var imageHeight = NSLayoutConstraint()
     private var imageWidth = NSLayoutConstraint()
-    var imageURL = URL(" ")
+    private let shareIcon = UIImage(systemName: "square.and.arrow.up")
 
     var image: UIImage? {
         didSet {
@@ -23,14 +25,34 @@ final class SingleImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        super.viewDidLoad()
         setupView()
         setupScroll()
-        if let image = image, singleImageView.image == nil {
-            singleImageView.image = image
-            imageWidth.constant = image.size.width
-            imageHeight.constant = image.size.height
-            rescaleAndCenterImageInScrollView(image: image)
+        
+    }
+     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
+         UIBlockingProgressHUD.show()
+         
+         guard let url = URL(string: photo.fullImageURL) else {
+             print("Неправильный URL")
+             UIBlockingProgressHUD.dismiss()
+             return
+         }
+         
+        singleImageView.kf.setImage(
+            with: url,
+            placeholder: UIImage(resource: ._1)
+        ) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self else { return }
+            
+            switch result {
+            case .success(let imageResult):
+                print("[KF]: Изображение загружено, устанавливаю")
+                image = imageResult.image
+            case let .failure(error):
+                print("[KF]: Ошибка загрузки изображения \(error)")
+                return
+            }
         }
     }
 
@@ -52,8 +74,9 @@ final class SingleImageViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonTap), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
-
-        shareButton.setImage(UIImage(resource: .sharing), for: .normal)
+        
+        
+        shareButton.setImage(shareIcon, for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
         shareButton.backgroundColor = UIColor(resource: .ypBlack)
         shareButton.layer.masksToBounds = true
@@ -92,7 +115,7 @@ final class SingleImageViewController: UIViewController {
 
     func setupScroll() {
         scrollView.delegate = self
-        scrollView.minimumZoomScale = 0.1
+        scrollView.minimumZoomScale = 0.2
         scrollView.maximumZoomScale = 1.25
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false

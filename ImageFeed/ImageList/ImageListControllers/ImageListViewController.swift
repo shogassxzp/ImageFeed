@@ -79,7 +79,7 @@ extension ImageListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let photo = photos[indexPath.row]
         let singleImageViewController = SingleImageViewController()
-        singleImageViewController.imageURL = URL(string: photo.largeImageURL)
+        singleImageViewController.setImage(with: photo, indexPath: indexPath)
         singleImageViewController.modalPresentationStyle = .fullScreen
         present(singleImageViewController, animated: true, completion: nil)
     }
