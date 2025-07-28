@@ -18,6 +18,7 @@ final class ProfileLogoutService {
     private func clearImageCache() {
         KingfisherManager.shared.cache.clearMemoryCache()
         KingfisherManager.shared.cache.clearDiskCache()
+        KingfisherManager.shared.downloader.cancelAll()
     }
 
     private func clearCookies() {
