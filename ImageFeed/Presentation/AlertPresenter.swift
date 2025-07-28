@@ -11,11 +11,11 @@ enum AlertPresenter {
             message: message,
             preferredStyle: .alert
         )
-
+        
         let action = UIAlertAction(title: buttonTitle, style: .default) { _ in
             handler?()
         }
-
+        
         alert.addAction(action)
         viewController.present(alert, animated: true, completion: nil)
     }

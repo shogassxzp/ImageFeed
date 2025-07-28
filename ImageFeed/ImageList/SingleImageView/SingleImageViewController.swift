@@ -1,5 +1,5 @@
-import UIKit
 import Kingfisher
+import UIKit
 
 final class SingleImageViewController: UIViewController {
     private var photos: [ImageListService.Photo] = []
@@ -27,30 +27,31 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupScroll()
-        
     }
-     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
-         UIBlockingProgressHUD.show()
-         
-         guard let url = URL(string: photo.fullImageURL) else {
-             print("Неправильный URL")
-             UIBlockingProgressHUD.dismiss()
-             return
-         }
-         
+
+    func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
+        UIBlockingProgressHUD.show()
+
+        guard let url = URL(string: photo.fullImageURL) else {
+            print("Неправильный URL")
+            UIBlockingProgressHUD.dismiss()
+            return
+        }
+
         singleImageView.kf.setImage(
             with: url,
             placeholder: UIImage(resource: ._1)
         ) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
             guard let self else { return }
-            
+
             switch result {
-            case .success(let imageResult):
+            case let .success(imageResult):
                 print("[KF]: Изображение загружено, устанавливаю")
                 image = imageResult.image
             case let .failure(error):
                 print("[KF]: Ошибка загрузки изображения \(error)")
+                showSingleImageError(url: url)
                 return
             }
         }
@@ -74,8 +75,7 @@ final class SingleImageViewController: UIViewController {
         backButton.addTarget(self, action: #selector(backButtonTap), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
-        
-        
+
         shareButton.setImage(shareIcon, for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
         shareButton.backgroundColor = UIColor(resource: .ypBlack)
@@ -176,6 +176,39 @@ final class SingleImageViewController: UIViewController {
         let yOffset = max(0, (newContentSize.height - visibleRectSize.height) / 2)
         // Устанавливаем центр
         scrollView.contentOffset = CGPoint(x: xOffset, y: yOffset)
+    }
+
+    private func showSingleImageError(url: URL) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Попробовать ещё раз?",
+            preferredStyle: .alert
+        )
+        let ok = UIAlertAction(title: "Не надо", style: .default) { _ in
+        }
+        let retry = UIAlertAction(title: "Повторить", style: .default) { _ in
+            UIBlockingProgressHUD.show()
+            self.singleImageView.kf.setImage(
+                with: url,
+                placeholder: UIImage(resource: ._1)
+            ) { [weak self] result in
+                UIBlockingProgressHUD.dismiss()
+                guard let self else { return }
+
+                switch result {
+                case let .success(imageResult):
+                    print("[KF]: Изображение загружено, устанавливаю")
+                    image = imageResult.image
+                case let .failure(error):
+                    print("[KF]: Ошибка загрузки изображения \(error)")
+                    showSingleImageError(url: url)
+                    return
+                }
+            }
+        }
+        alert.addAction(ok)
+        alert.addAction(retry)
+        present(alert, animated: true)
     }
 }
 

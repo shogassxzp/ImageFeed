@@ -5,8 +5,8 @@ import ProgressHUD
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         ProgressHUD.animationType = .circleArcDotSpin
-        ProgressHUD.colorHUD = .white
-        ProgressHUD.colorAnimation = .black
+        ProgressHUD.colorHUD = .ypBlack
+        ProgressHUD.colorAnimation = .ypWhite
         return true
     }
 
