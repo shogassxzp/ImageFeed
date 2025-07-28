@@ -1,7 +1,9 @@
 import Kingfisher
 import UIKit
+import ProgressHUD
 
 final class SingleImageViewController: UIViewController {
+    
     private var photos: [ImageListService.Photo] = []
     private var scrollView = UIScrollView()
     private var singleImageView = UIImageView()
@@ -9,8 +11,7 @@ final class SingleImageViewController: UIViewController {
     private var shareButton = UIButton(type: .system)
     private var imageHeight = NSLayoutConstraint()
     private var imageWidth = NSLayoutConstraint()
-    private let shareIcon = UIImage(systemName: "square.and.arrow.up")
-
+    
     var image: UIImage? {
         didSet {
             guard let image else { return }
@@ -30,11 +31,11 @@ final class SingleImageViewController: UIViewController {
     }
 
     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
-        UIBlockingProgressHUD.show()
+        ProgressHUD.animate()
 
         guard let url = URL(string: photo.fullImageURL) else {
             print("Неправильный URL")
-            UIBlockingProgressHUD.dismiss()
+            ProgressHUD.dismiss()
             return
         }
 
@@ -42,7 +43,7 @@ final class SingleImageViewController: UIViewController {
             with: url,
             placeholder: UIImage(resource: ._1)
         ) { [weak self] result in
-            UIBlockingProgressHUD.dismiss()
+            ProgressHUD.dismiss()
             guard let self else { return }
 
             switch result {
@@ -76,7 +77,7 @@ final class SingleImageViewController: UIViewController {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
 
-        shareButton.setImage(shareIcon, for: .normal)
+        shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
         shareButton.backgroundColor = UIColor(resource: .ypBlack)
         shareButton.layer.masksToBounds = true
@@ -113,18 +114,21 @@ final class SingleImageViewController: UIViewController {
         imageHeight.isActive = true
     }
 
-    func setupScroll() {
+   private func setupScroll() {
         scrollView.delegate = self
         scrollView.minimumZoomScale = 0.2
         scrollView.maximumZoomScale = 1.25
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
+        
     }
 
     // MARK: Buttons actions
 
     @objc func backButtonTap(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+        singleImageView.kf.cancelDownloadTask()
+        ProgressHUD.dismiss()
     }
 
     @objc func shareButtonTap(_ sender: Any) {
@@ -185,14 +189,16 @@ final class SingleImageViewController: UIViewController {
             preferredStyle: .alert
         )
         let ok = UIAlertAction(title: "Не надо", style: .default) { _ in
+            alert.dismiss(animated: true)
+            self.dismiss(animated: true)
         }
         let retry = UIAlertAction(title: "Повторить", style: .default) { _ in
-            UIBlockingProgressHUD.show()
+            ProgressHUD.animate()
             self.singleImageView.kf.setImage(
                 with: url,
                 placeholder: UIImage(resource: ._1)
             ) { [weak self] result in
-                UIBlockingProgressHUD.dismiss()
+                ProgressHUD.dismiss()
                 guard let self else { return }
 
                 switch result {

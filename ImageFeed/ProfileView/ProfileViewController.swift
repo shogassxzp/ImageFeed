@@ -2,17 +2,17 @@ import Kingfisher
 import ProgressHUD
 import UIKit
 
-private var profileImageServiceObserver: NSObjectProtocol?
-
-// Create View`s
-
-private var profilePhoto = UIImageView()
-private var usernameLabel = UILabel()
-private var bioLabel = UILabel()
-private var userTagLabel = UILabel()
-private var logoutButton = UIButton()
-
 final class ProfileViewController: UIViewController {
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    private let logoutService = ProfileLogoutService.shared
+
+    private var profilePhoto = UIImageView()
+    private var usernameLabel = UILabel()
+    private var bioLabel = UILabel()
+    private var userTagLabel = UILabel()
+    private var logoutButton = UIButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -96,6 +96,7 @@ final class ProfileViewController: UIViewController {
         logoutButton.setImage(UIImage(resource: .logout), for: .normal)
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
+        logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
     }
 
     private func updateProfileData() {
@@ -104,9 +105,9 @@ final class ProfileViewController: UIViewController {
             return
         }
         DispatchQueue.main.async {
-            usernameLabel.text = profile.name
-            userTagLabel.text = profile.loginName
-            bioLabel.text = profile.bio ?? "No Bio avalible"
+            self.usernameLabel.text = profile.name
+            self.userTagLabel.text = profile.loginName
+            self.bioLabel.text = profile.bio ?? "No Bio avalible"
         }
     }
 
@@ -119,5 +120,8 @@ final class ProfileViewController: UIViewController {
         profilePhoto.kf.setImage(with: url,
                                  placeholder: UIImage(resource: .photo),
                                  options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))])
+    }
+    @objc private func logout() {
+        logoutService.logout()
     }
 }
