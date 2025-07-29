@@ -29,6 +29,13 @@ final class SingleImageViewController: UIViewController {
         setupView()
         setupScroll()
     }
+    
+    deinit {
+        DispatchQueue.main.async {
+            self.singleImageView.kf.cancelDownloadTask()
+        }
+       
+    }
 
     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
         ProgressHUD.animate()

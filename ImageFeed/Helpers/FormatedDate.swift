@@ -1,5 +1,3 @@
-//  Date extension from previous project with mod. Using in configCell
-
 import Foundation
 
 extension Date {
