@@ -97,6 +97,7 @@ final class ImagesListCell: UITableViewCell {
         }
         tableDataLabel.text = photo.createdAt?.formattedDate() ?? "Дата неизвестна"
         tableLikeButton.setImage(UIImage(resource: photo.isLike ? .active : .noActive), for: .normal)
+        tableLikeButton.tintColor = photo.isLike ? .ypRed : .ypGray
         photoId = photo.id
 
         if let observer = likeNotificationObserver {
@@ -108,9 +109,9 @@ final class ImagesListCell: UITableViewCell {
             queue: .main
         ) { [weak self] _ in
             guard let self,
-                  let photoId = self.photoId,
-                  let currentPhoto = ImageListService.shared.photos.first(where: { $0.id == photoId })
-            else { return }
+                  let photoId = ["photoId"] as? String,
+                  let currentPhoto = ImageListService.shared.photos.first(where: { $0.id == photoId }),
+                  let index = ImageListService.shared.photos.firstIndex(where: { $0.id == photoId }) else { return }
 
             self.setLikeButtonState(isLiked: currentPhoto.isLike)
         }

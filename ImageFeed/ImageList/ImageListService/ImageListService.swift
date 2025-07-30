@@ -166,7 +166,8 @@ final class ImageListService {
                             )
                             self.photos[index] = newPhoto
                             NotificationCenter.default.post(name: ImageListService.likeChangedNotification,
-                                                            object: nil)
+                                                            object: nil,
+                                                            userInfo: ["photoId": photoId])
                             completion(.success(()))
                         } else {
                             print("[ImageListService]: Фото \(photoId) не найдено в массиве photos")
