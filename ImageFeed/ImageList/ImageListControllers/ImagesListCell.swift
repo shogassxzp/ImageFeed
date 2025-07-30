@@ -8,7 +8,6 @@ protocol ImagesListCellDelegate: AnyObject {
 final class ImagesListCell: UITableViewCell {
     private var photoId: String?
     private var likeNotificationObserver: NSObjectProtocol?
-
     var tableLikeButton = UIButton(type: .system)
     var tableDataLabel = UILabel()
     var tableImageView = UIImageView()
@@ -31,11 +30,11 @@ final class ImagesListCell: UITableViewCell {
     private func setupCell() {
         contentView.backgroundColor = UIColor(resource: .ypBlack)
         // imageView settings
-        tableImageView.contentMode = .scaleAspectFill
+        tableImageView.contentMode = .center
         tableImageView.layer.masksToBounds = true
         tableImageView.layer.cornerRadius = 16
         tableImageView.translatesAutoresizingMaskIntoConstraints = false
-        tableImageView.backgroundColor = UIColor(resource: .ypBlack)
+        tableImageView.backgroundColor = .ypWhiteAlpha
         contentView.addSubview(tableImageView)
         // gradientView settings
         gradientView.layer.masksToBounds = true
@@ -81,7 +80,7 @@ final class ImagesListCell: UITableViewCell {
         tableImageView.kf.indicatorType = .activity
         tableImageView.kf.setImage(
             with: URL(string: photo.thumbImageURL),
-            placeholder: UIImage(resource: ._0),
+            placeholder: UIImage(resource: .scribble),
         ) { [weak tableView] result in
             guard let tableView else { return }
 
@@ -89,6 +88,8 @@ final class ImagesListCell: UITableViewCell {
             case .success:
                 print("[KF]: Изображение загружено, устанавливаю")
                 tableView.reloadRows(at: [indexPath], with: .automatic)
+                self.tableImageView.contentMode = .scaleAspectFit
+                self.tableImageView.backgroundColor = .ypBlack
             case let .failure(error):
                 print("[KF]: Ошибка загрузки изображения \(error)")
                 return
@@ -158,6 +159,8 @@ extension ImagesListCell {
         super.prepareForReuse()
         tableImageView.kf.cancelDownloadTask()
         tableImageView.image = nil
+        tableImageView.contentMode = .center
+        tableImageView.backgroundColor = .ypWhiteAlpha
         tableDataLabel.text = nil
         tableLikeButton.setImage(nil, for: .normal)
         if let observer = likeNotificationObserver {
