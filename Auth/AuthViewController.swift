@@ -63,14 +63,11 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         print("[AuthViewController]: Получен код в AuthViewController: \(code)")
-        UIBlockingProgressHUD.show()
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            UIBlockingProgressHUD.dismiss()
             guard let self else { return }
             switch result {
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token
-
                 print("[AuthViewController]: Токен получен: \(token), вызываем делегата")
                 if self.delegate != nil {
                     print("[AuthViewController]: Делегат Auth существует, вызываем didAuthenticate")

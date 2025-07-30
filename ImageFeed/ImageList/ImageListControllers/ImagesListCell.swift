@@ -162,7 +162,7 @@ extension ImagesListCell {
         tableImageView.contentMode = .center
         tableImageView.backgroundColor = .ypWhiteAlpha
         tableDataLabel.text = nil
-        tableLikeButton.setImage(nil, for: .normal)
+        tableLikeButton.setImage(.noActive, for: .normal)
         if let observer = likeNotificationObserver {
             NotificationCenter.default.removeObserver(observer)
             likeNotificationObserver = nil
