@@ -19,39 +19,38 @@ final class ImagesListCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+        addSubviews()
         setupCell()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    private func addSubviews() {
+        [tableImageView, gradientView, tableDataLabel,tableLikeButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
+    }
+    
     private func setupCell() {
         contentView.backgroundColor = UIColor(resource: .ypBlack)
         // imageView settings
         tableImageView.contentMode = .center
         tableImageView.layer.masksToBounds = true
         tableImageView.layer.cornerRadius = 16
-        tableImageView.translatesAutoresizingMaskIntoConstraints = false
         tableImageView.backgroundColor = .ypWhiteAlpha
-        contentView.addSubview(tableImageView)
         // gradientView settings
         gradientView.layer.masksToBounds = true
         gradientView.layer.cornerRadius = 16
-        gradientView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(gradientView)
         // dataLabel settings
         tableDataLabel.font = .systemFont(ofSize: 13)
         tableDataLabel.textColor = UIColor(resource: .ypWhite)
-        tableDataLabel.translatesAutoresizingMaskIntoConstraints = false
-        gradientView.addSubview(tableDataLabel)
         // likeButton settings
         tableLikeButton.setImage(UIImage(resource: .noActive), for: .normal)
         tableLikeButton.tintColor = .ypWhite
         tableLikeButton.addTarget(self, action: #selector(likeButtonClicked), for: .touchUpInside)
-        tableLikeButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(tableLikeButton)
         //
         contentView.sendSubviewToBack(tableImageView)
 
