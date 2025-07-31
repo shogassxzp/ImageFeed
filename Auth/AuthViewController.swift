@@ -5,12 +5,10 @@ protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
 
-
-
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     private let logoImageView = UIImageView()
     private let loginButton = UIButton(type: .system)
-    
+
     weak var delegate: AuthViewControllerDelegate?
 
     override func viewDidLoad() {

@@ -12,7 +12,6 @@ final class ProfileService {
         let firstName: String?
         let lastName: String?
         let bio: String?
-
     }
 
     struct Profile {
@@ -38,7 +37,7 @@ final class ProfileService {
         }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get
         return request
     }
 

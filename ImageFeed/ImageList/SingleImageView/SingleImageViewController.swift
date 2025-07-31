@@ -1,9 +1,8 @@
 import Kingfisher
-import UIKit
 import ProgressHUD
+import UIKit
 
 final class SingleImageViewController: UIViewController {
-    
     private var photos: [ImageListService.Photo] = []
     private var scrollView = UIScrollView()
     private var singleImageView = UIImageView()
@@ -11,7 +10,7 @@ final class SingleImageViewController: UIViewController {
     private var shareButton = UIButton(type: .system)
     private var imageHeight = NSLayoutConstraint()
     private var imageWidth = NSLayoutConstraint()
-    
+
     var image: UIImage? {
         didSet {
             guard let image else { return }
@@ -29,7 +28,7 @@ final class SingleImageViewController: UIViewController {
         setupView()
         setupScroll()
     }
-    
+
     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
         ProgressHUD.animate()
 
@@ -38,7 +37,7 @@ final class SingleImageViewController: UIViewController {
             ProgressHUD.dismiss()
             return
         }
-        
+
         singleImageView.kf.setImage(
             with: url,
             placeholder: UIImage(resource: ._1)
@@ -114,13 +113,12 @@ final class SingleImageViewController: UIViewController {
         imageHeight.isActive = true
     }
 
-   private func setupScroll() {
+    private func setupScroll() {
         scrollView.delegate = self
         scrollView.minimumZoomScale = 0.2
         scrollView.maximumZoomScale = 1.25
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
-        
     }
 
     // MARK: Buttons actions
@@ -139,7 +137,7 @@ final class SingleImageViewController: UIViewController {
 
         present(activityController, animated: true, completion: nil)
     }
-    
+
     private func cancelDownloadTask() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -190,9 +188,11 @@ final class SingleImageViewController: UIViewController {
     }
 
     private func showSingleImageError(url: URL) {
+        let title = "Что-то пошло не так"
+        let message = "Попробовать ещё раз?"
         let alert = UIAlertController(
-            title: "Что-то пошло не так",
-            message: "Попробовать ещё раз?",
+            title: title,
+            message: message,
             preferredStyle: .alert
         )
         let ok = UIAlertAction(title: "Не надо", style: .default) { _ in

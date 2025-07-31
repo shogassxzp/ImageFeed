@@ -99,104 +99,100 @@ final class ImageListService {
         }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(storage.token ?? " ")", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get
         return request
     }
 
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
-            guard task == nil else {
-                print("[ImageListService]: Запрос уже выполняется, пропускаем changeLike")
-                completion(.failure(NetworkError.alreadyInProgress))
+        guard task == nil else {
+            print("[ImageListService]: Запрос уже выполняется, пропускаем changeLike")
+            completion(.failure(NetworkError.alreadyInProgress))
+            return
+        }
+
+        guard let request = makeRequestForLike(photoId: photoId, isLiked: isLike) else {
+            print("[ImageListService]: Не удалось создать запрос для лайка фото \(photoId)")
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
+
+        print("[ImageListService]: Отправляем \(isLike ? "POST" : "DELETE") запрос для фото \(photoId)\(Date())")
+        task = urlSession.dataTask(with: request) { [weak self] data, response, error in
+            guard let self else { return }
+            self.task = nil
+
+            if let error {
+                print("[ImageListService]: Ошибка лайка: \(error)")
+                completion(.failure(error))
                 return
             }
-            
-        guard let request = makeRequestForLike(photoId: photoId, isLiked: isLike) else {
-                print("[ImageListService]: Не удалось создать запрос для лайка фото \(photoId)")
+
+            guard let httpResponse = response as? HTTPURLResponse, (200 ... 299).contains(httpResponse.statusCode) else {
+                print("[ImageListService]: Неверный HTTP-статус: \(String(describing: response))")
                 completion(.failure(NetworkError.invalidRequest))
                 return
             }
-            
-        print("[ImageListService]: Отправляем \(isLike ? "POST" : "DELETE") запрос для фото \(photoId)\(Date())")
-            task = urlSession.dataTask(with: request) { [weak self] data, response, error in
-                guard let self else { return }
-                self.task = nil
-                
-                if let error {
-                    print("[ImageListService]: Ошибка лайка: \(error)")
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                    print("[ImageListService]: Неверный HTTP-статус: \(String(describing: response))")
-                    completion(.failure(NetworkError.invalidRequest))
-                    return
-                }
-                
-                guard let data else {
-                    print("[ImageListService]: Данные не получены")
-                    completion(.failure(NetworkError.invalidRequest))
-                    return
-                }
-                
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-                    guard let photoData = json?["photo"], let photoDataEncoded = try? JSONSerialization.data(withJSONObject: photoData) else {
-                        print("[ImageListService]: Не удалось извлечь поле 'photo'")
-                        completion(.failure(NetworkError.invalidRequest))
-                        return
-                    }
-                    
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let photoResult = try decoder.decode(PhotoResult.self, from: photoDataEncoded)
-                    
-                    print("[ImageListService]: Лайк для фото \(photoId) успешно изменён, likedByUser: \(photoResult.likedByUser)")
-                    DispatchQueue.main.async {
-                        if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                            let photo = self.photos[index]
-                            let newPhoto = Photo(
-                                id: photo.id,
-                                size: photo.size,
-                                createdAt: photo.createdAt,
-                                welcomeDescription: photo.welcomeDescription,
-                                thumbImageURL: photo.thumbImageURL,
-                                fullImageURL: photo.fullImageURL,
-                                isLike: photoResult.likedByUser
-                            )
-                            self.photos[index] = newPhoto
-                            NotificationCenter.default.post(name: ImageListService.likeChangedNotification,
-                                                            object: nil,
-                                                            userInfo: ["photoId": photoId])
-                            completion(.success(()))
-                        } else {
-                            print("[ImageListService]: Фото \(photoId) не найдено в массиве photos")
-                            completion(.failure(NetworkError.invalidRequest))
-                            
-                        }
-                    }
-                } catch {
-                    print("[ImageListService]: Ошибка декодирования: \(error)")
-                    completion(.failure(error))
-                }
+
+            guard let data else {
+                print("[ImageListService]: Данные не получены")
+                completion(.failure(NetworkError.invalidRequest))
+                return
             }
-            task?.resume()
+
+            do {
+                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                guard let photoData = json?["photo"], let photoDataEncoded = try? JSONSerialization.data(withJSONObject: photoData) else {
+                    print("[ImageListService]: Не удалось извлечь поле 'photo'")
+                    completion(.failure(NetworkError.invalidRequest))
+                    return
+                }
+
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let photoResult = try decoder.decode(PhotoResult.self, from: photoDataEncoded)
+
+                print("[ImageListService]: Лайк для фото \(photoId) успешно изменён, likedByUser: \(photoResult.likedByUser)")
+                DispatchQueue.main.async {
+                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                        let photo = self.photos[index]
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDescription: photo.welcomeDescription,
+                            thumbImageURL: photo.thumbImageURL,
+                            fullImageURL: photo.fullImageURL,
+                            isLike: photoResult.likedByUser
+                        )
+                        self.photos[index] = newPhoto
+                        NotificationCenter.default.post(name: ImageListService.likeChangedNotification,
+                                                        object: nil,
+                                                        userInfo: ["photoId": photoId])
+                        completion(.success(()))
+                    } else {
+                        print("[ImageListService]: Фото \(photoId) не найдено в массиве photos")
+                        completion(.failure(NetworkError.invalidRequest))
+                    }
+                }
+            } catch {
+                print("[ImageListService]: Ошибка декодирования: \(error)")
+                completion(.failure(error))
+            }
+        }
+        task?.resume()
     }
+
     private func makeRequestForLike(photoId: String, isLiked: Bool) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {
             return nil
         }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(storage.token ?? "")", forHTTPHeaderField: "Authorization")
-        request.httpMethod = isLiked ? "POST" : "DELETE"
+        request.httpMethod = isLiked ? HTTPMethod.post : HTTPMethod.delete
         return request
     }
 }
 
-
 extension ImageListService {
     static let shared = ImageListService()
 }
-
-  
-

@@ -5,7 +5,6 @@ struct OAuthTokenResponse: Codable {
     let tokenType: String
     let scope: String
     let createdAt: Int
-
 }
 
 final class OAuth2Service {
@@ -35,7 +34,7 @@ final class OAuth2Service {
         }
 
         var request = URLRequest(url: authTokenUrl)
-        request.httpMethod = "POST"
+        request.httpMethod = HTTPMethod.post
         return request
     }
 

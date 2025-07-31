@@ -4,7 +4,7 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     private var profileImageServiceObserver: NSObjectProtocol?
-    
+
     private let logoutService = ProfileLogoutService.shared
 
     private var profilePhoto = UIImageView()
@@ -12,7 +12,7 @@ final class ProfileViewController: UIViewController {
     private var bioLabel = UILabel()
     private var userTagLabel = UILabel()
     private var logoutButton = UIButton()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -121,6 +121,7 @@ final class ProfileViewController: UIViewController {
                                  placeholder: UIImage(resource: .photo),
                                  options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))])
     }
+
     @objc private func logout() {
         logoutService.logout()
     }
