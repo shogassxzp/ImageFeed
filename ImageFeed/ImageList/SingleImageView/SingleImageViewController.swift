@@ -57,8 +57,9 @@ final class SingleImageViewController: UIViewController {
             }
         }
     }
+
     private func addSubview() {
-        [scrollView,backButton,shareButton].forEach{
+        [scrollView, backButton, shareButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
             scrollView.addSubview(singleImageView)
@@ -73,7 +74,7 @@ final class SingleImageViewController: UIViewController {
 
         singleImageView.backgroundColor = UIColor(resource: .ypBlack)
         singleImageView.contentMode = .scaleAspectFit
-        
+
         backButton.setImage(UIImage(resource: .backward), for: .normal)
         backButton.tintColor = UIColor(resource: .ypWhite)
         backButton.contentHorizontalAlignment = .left

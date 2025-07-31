@@ -30,8 +30,9 @@ final class ProfileViewController: UIViewController {
             }
         updateAvatar()
     }
+
     private func addSubview() {
-        [profilePhoto,usernameLabel,userTagLabel,bioLabel,logoutButton].forEach{
+        [profilePhoto, usernameLabel, userTagLabel, bioLabel, logoutButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }

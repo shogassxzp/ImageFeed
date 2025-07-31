@@ -41,17 +41,14 @@ final class ImageListViewController: UIViewController {
 
     func updateTableViewAnimated() {
         let oldCount = photos.count
-        let newCount = listService.photos.count
-
         photos = listService.photos
+        let newCount = photos.count
 
-        if oldCount != newCount {
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount ..< newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } completion: { _ in }
+        guard oldCount != newCount else { return }
+
+        let indexPaths = (oldCount ..< newCount).map { IndexPath(row: $0, section: 0) }
+        tableView.performBatchUpdates {
+            tableView.insertRows(at: indexPaths, with: .automatic)
         }
     }
 }
@@ -60,7 +57,7 @@ final class ImageListViewController: UIViewController {
 
 extension ImageListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photos.count
+        photos.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
