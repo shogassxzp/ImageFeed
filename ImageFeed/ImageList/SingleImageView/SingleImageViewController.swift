@@ -25,6 +25,7 @@ final class SingleImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        addSubview()
         setupView()
         setupScroll()
     }
@@ -56,25 +57,27 @@ final class SingleImageViewController: UIViewController {
             }
         }
     }
+    private func addSubview() {
+        [scrollView,backButton,shareButton].forEach{
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+            scrollView.addSubview(singleImageView)
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+        }
+    }
 
     private func setupView() {
         view.backgroundColor = UIColor(resource: .ypBlack)
 
         scrollView.backgroundColor = UIColor(resource: .ypBlack)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scrollView)
 
         singleImageView.backgroundColor = UIColor(resource: .ypBlack)
         singleImageView.contentMode = .scaleAspectFit
-        singleImageView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(singleImageView)
-
+        
         backButton.setImage(UIImage(resource: .backward), for: .normal)
         backButton.tintColor = UIColor(resource: .ypWhite)
         backButton.contentHorizontalAlignment = .left
         backButton.addTarget(self, action: #selector(backButtonTap), for: .touchUpInside)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(backButton)
 
         shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
@@ -82,8 +85,6 @@ final class SingleImageViewController: UIViewController {
         shareButton.layer.masksToBounds = true
         shareButton.layer.cornerRadius = 25
         shareButton.addTarget(self, action: #selector(shareButtonTap), for: .touchUpInside)
-        shareButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(shareButton)
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
