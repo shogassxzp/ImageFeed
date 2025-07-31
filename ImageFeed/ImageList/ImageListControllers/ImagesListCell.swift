@@ -110,9 +110,8 @@ final class ImagesListCell: UITableViewCell {
         ) { [weak self] _ in
             guard let self,
                   let photoId = ["photoId"] as? String,
-                  let currentPhoto = ImageListService.shared.photos.first(where: { $0.id == photoId }),
-                  let index = ImageListService.shared.photos.firstIndex(where: { $0.id == photoId }) else { return }
-
+                  let currentPhoto = ImageListService.shared.photos.first(where: { $0.id == photoId })
+            else { return }
             self.setLikeButtonState(isLiked: currentPhoto.isLike)
         }
     }

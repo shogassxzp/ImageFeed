@@ -30,13 +30,6 @@ final class SingleImageViewController: UIViewController {
         setupScroll()
     }
     
-    deinit {
-        DispatchQueue.main.async {
-            self.singleImageView.kf.cancelDownloadTask()
-        }
-       
-    }
-
     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
         ProgressHUD.animate()
 
@@ -45,7 +38,7 @@ final class SingleImageViewController: UIViewController {
             ProgressHUD.dismiss()
             return
         }
-
+        
         singleImageView.kf.setImage(
             with: url,
             placeholder: UIImage(resource: ._1)
@@ -133,8 +126,8 @@ final class SingleImageViewController: UIViewController {
     // MARK: Buttons actions
 
     @objc func backButtonTap(_ sender: Any) {
+        cancelDownloadTask()
         dismiss(animated: true, completion: nil)
-        singleImageView.kf.cancelDownloadTask()
         ProgressHUD.dismiss()
     }
 
@@ -145,6 +138,13 @@ final class SingleImageViewController: UIViewController {
         let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
 
         present(activityController, animated: true, completion: nil)
+    }
+    
+    private func cancelDownloadTask() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.singleImageView.kf.cancelDownloadTask()
+        }
     }
 
     // MARK: Rescale and center
