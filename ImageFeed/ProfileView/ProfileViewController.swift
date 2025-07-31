@@ -15,7 +15,7 @@ final class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        addSubview()
         configView()
         updateProfileData()
 
@@ -29,42 +29,12 @@ final class ProfileViewController: UIViewController {
                 print("get notify")
             }
         updateAvatar()
-
-        // Disable mask
-        usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-        userTagLabel.translatesAutoresizingMaskIntoConstraints = false
-        bioLabel.translatesAutoresizingMaskIntoConstraints = false
-        profilePhoto.translatesAutoresizingMaskIntoConstraints = false
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-
-        // Add subview
-        view.addSubview(profilePhoto)
-        view.addSubview(usernameLabel)
-        view.addSubview(userTagLabel)
-        view.addSubview(bioLabel)
-        view.addSubview(logoutButton)
-
-        // Set constraint
-        NSLayoutConstraint.activate([
-            profilePhoto.widthAnchor.constraint(equalToConstant: 70),
-            profilePhoto.heightAnchor.constraint(equalToConstant: 70),
-            profilePhoto.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            profilePhoto.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
-
-            usernameLabel.topAnchor.constraint(equalTo: profilePhoto.bottomAnchor, constant: 8),
-            usernameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-
-            userTagLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
-            userTagLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor, constant: 0),
-
-            bioLabel.topAnchor.constraint(equalTo: userTagLabel.bottomAnchor, constant: 8),
-            bioLabel.leadingAnchor.constraint(equalTo: userTagLabel.leadingAnchor, constant: 0),
-
-            logoutButton.centerYAnchor.constraint(equalTo: profilePhoto.centerYAnchor),
-            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            logoutButton.widthAnchor.constraint(equalToConstant: 44),
-            logoutButton.heightAnchor.constraint(equalToConstant: 44),
-        ])
+    }
+    private func addSubview() {
+        [profilePhoto,usernameLabel,userTagLabel,bioLabel,logoutButton].forEach{
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
     }
 
     private func configView() {
@@ -97,6 +67,27 @@ final class ProfileViewController: UIViewController {
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
         logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        // Set constraint
+        NSLayoutConstraint.activate([
+            profilePhoto.widthAnchor.constraint(equalToConstant: 70),
+            profilePhoto.heightAnchor.constraint(equalToConstant: 70),
+            profilePhoto.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            profilePhoto.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+
+            usernameLabel.topAnchor.constraint(equalTo: profilePhoto.bottomAnchor, constant: 8),
+            usernameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+
+            userTagLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
+            userTagLabel.leadingAnchor.constraint(equalTo: usernameLabel.leadingAnchor, constant: 0),
+
+            bioLabel.topAnchor.constraint(equalTo: userTagLabel.bottomAnchor, constant: 8),
+            bioLabel.leadingAnchor.constraint(equalTo: userTagLabel.leadingAnchor, constant: 0),
+
+            logoutButton.centerYAnchor.constraint(equalTo: profilePhoto.centerYAnchor),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            logoutButton.widthAnchor.constraint(equalToConstant: 44),
+            logoutButton.heightAnchor.constraint(equalToConstant: 44),
+        ])
     }
 
     private func updateProfileData() {
