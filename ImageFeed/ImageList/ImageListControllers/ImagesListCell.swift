@@ -26,14 +26,14 @@ final class ImagesListCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func addSubviews() {
-        [tableImageView, gradientView, tableDataLabel,tableLikeButton].forEach {
+        [tableImageView, gradientView, tableDataLabel, tableLikeButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview($0)
         }
     }
-    
+
     private func setupCell() {
         contentView.backgroundColor = UIColor(resource: .ypBlack)
         // imageView settings
@@ -106,12 +106,16 @@ final class ImagesListCell: UITableViewCell {
             forName: ImageListService.likeChangedNotification,
             object: nil,
             queue: .main
-        ) { [weak self] _ in
+        ) { [weak self] notification in
             guard let self,
-                  let photoId = ["photoId"] as? String,
+                  let userInfo = notification.userInfo,
+                  let photoId = userInfo["photoId"] as? String,
                   let currentPhoto = ImageListService.shared.photos.first(where: { $0.id == photoId })
             else { return }
-            self.setLikeButtonState(isLiked: currentPhoto.isLike)
+
+            if self.photoId == photoId {
+                self.setLikeButtonState(isLiked: currentPhoto.isLike)
+            }
         }
     }
 

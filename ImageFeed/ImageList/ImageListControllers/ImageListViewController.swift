@@ -110,8 +110,14 @@ extension ImageListViewController: ImagesListCellDelegate {
             switch result {
             case .success:
                 UIBlockingProgressHUD.dismiss()
+                self.photos = self.listService.photos
+
+                if let cell = self.tableView.cellForRow(at: indexPath) as? ImagesListCell {
+                    cell.setLikeButtonState(isLiked: self.photos[indexPath.row].isLike)
+                }
             case .failure:
                 UIBlockingProgressHUD.dismiss()
+                cell.setLikeButtonState(isLiked: photo.isLike)
                 // TODO: Сделать алёрт с ошибкой
             }
         }

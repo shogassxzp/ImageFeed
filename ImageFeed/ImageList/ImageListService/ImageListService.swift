@@ -38,7 +38,7 @@ final class ImageListService {
         let welcomeDescription: String?
         let thumbImageURL: String
         let fullImageURL: String
-        let isLike: Bool
+        var isLike: Bool
 
         // for decoder
         init(from result: PhotoResult) {
@@ -154,20 +154,13 @@ final class ImageListService {
                 print("[ImageListService]: Лайк для фото \(photoId) успешно изменён, likedByUser: \(photoResult.likedByUser)")
                 DispatchQueue.main.async {
                     if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                        let photo = self.photos[index]
-                        let newPhoto = Photo(
-                            id: photo.id,
-                            size: photo.size,
-                            createdAt: photo.createdAt,
-                            welcomeDescription: photo.welcomeDescription,
-                            thumbImageURL: photo.thumbImageURL,
-                            fullImageURL: photo.fullImageURL,
-                            isLike: photoResult.likedByUser
+                        self.photos[index].isLike = photoResult.likedByUser 
+
+                        NotificationCenter.default.post(
+                            name: ImageListService.likeChangedNotification,
+                            object: nil,
+                            userInfo: ["photoId": photoId]
                         )
-                        self.photos[index] = newPhoto
-                        NotificationCenter.default.post(name: ImageListService.likeChangedNotification,
-                                                        object: nil,
-                                                        userInfo: ["photoId": photoId])
                         completion(.success(()))
                     } else {
                         print("[ImageListService]: Фото \(photoId) не найдено в массиве photos")

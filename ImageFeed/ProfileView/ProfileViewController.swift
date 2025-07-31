@@ -43,10 +43,8 @@ final class ProfileViewController: UIViewController {
 
         profilePhoto.layer.masksToBounds = true
         profilePhoto.layer.cornerRadius = 35
-        usernameLabel = UILabel()
-        bioLabel = UILabel()
-        userTagLabel = UILabel()
-        logoutButton = UIButton(type: .system)
+        profilePhoto.contentMode = .scaleAspectFill
+        profilePhoto.clipsToBounds = true
 
         usernameLabel.text = "username"
         usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
