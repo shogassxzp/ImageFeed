@@ -25,14 +25,16 @@ final class SingleImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSubview()
         setupView()
         setupScroll()
+
+        if let image = image {
+            updateImage(with: image)
+        }
     }
 
     func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
         ProgressHUD.animate()
-
         guard let url = URL(string: photo.fullImageURL) else {
             print("Неправильный URL")
             ProgressHUD.dismiss()
@@ -48,37 +50,45 @@ final class SingleImageViewController: UIViewController {
 
             switch result {
             case let .success(imageResult):
-                print("[KF]: Изображение загружено, устанавливаю")
-                image = imageResult.image
+                print("[KF]: SingleImage загружено, устанавливаю")
+                self.image = imageResult.image
+                self.updateImage(with: imageResult.image)
             case let .failure(error):
-                print("[KF]: Ошибка загрузки изображения \(error)")
+                print("[KF]: Ошибка загрузки SingleImage \(error)")
                 showSingleImageError(url: url)
                 return
             }
         }
     }
 
-    private func addSubview() {
-        [scrollView, backButton, shareButton].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-            scrollView.addSubview(singleImageView)
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
+    private func updateImage(with image: UIImage) {
+        singleImageView.image = image
+        imageWidth.constant = image.size.width
+        imageHeight.constant = image.size.height
+
+        // Отложенное масштабирование после обновления layout
+        DispatchQueue.main.async {
+            self.rescaleAndCenterImageInScrollView(image: image)
         }
     }
 
     private func setupView() {
         view.backgroundColor = UIColor(resource: .ypBlack)
-
         scrollView.backgroundColor = UIColor(resource: .ypBlack)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
 
         singleImageView.backgroundColor = UIColor(resource: .ypBlack)
         singleImageView.contentMode = .scaleAspectFit
+        singleImageView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(singleImageView)
 
         backButton.setImage(UIImage(resource: .backward), for: .normal)
         backButton.tintColor = UIColor(resource: .ypWhite)
         backButton.contentHorizontalAlignment = .left
         backButton.addTarget(self, action: #selector(backButtonTap), for: .touchUpInside)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backButton)
 
         shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         shareButton.tintColor = UIColor(resource: .ypWhite)
@@ -86,6 +96,8 @@ final class SingleImageViewController: UIViewController {
         shareButton.layer.masksToBounds = true
         shareButton.layer.cornerRadius = 25
         shareButton.addTarget(self, action: #selector(shareButtonTap), for: .touchUpInside)
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(shareButton)
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -135,8 +147,8 @@ final class SingleImageViewController: UIViewController {
         guard let image = singleImageView.image else {
             return
         }
-        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
 
+        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityController, animated: true, completion: nil)
     }
 
@@ -155,24 +167,18 @@ final class SingleImageViewController: UIViewController {
         // Размеры экрана и фотки
         let visibleRectSize = scrollView.bounds.size
         let imageSize = image.size
-
         // Минимальный и максимальный масштаб
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
-
         // Вычисляем масштаб
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
         let scale = max(minZoomScale, min(maxZoomScale, max(hScale, vScale)))
-
         // Устанавливаем масштаб
         scrollView.setZoomScale(scale, animated: false)
-
         // Убеждаемся, что layout обновился после изменения масштаба
         scrollView.layoutIfNeeded()
-
         let newContentSize = scrollView.contentSize
-
         let horizontalInset = max(0, (newContentSize.width) / 2)
         let verticalInset = max(0, (newContentSize.height) / 2)
         // Добавляем inset
@@ -190,11 +196,9 @@ final class SingleImageViewController: UIViewController {
     }
 
     private func showSingleImageError(url: URL) {
-        let title = "Что-то пошло не так"
-        let message = "Попробовать ещё раз?"
         let alert = UIAlertController(
-            title: title,
-            message: message,
+            title: "Что-то пошло не так",
+            message: "Попробовать ещё раз?",
             preferredStyle: .alert
         )
         let ok = UIAlertAction(title: "Не надо", style: .default) { _ in
@@ -231,6 +235,6 @@ final class SingleImageViewController: UIViewController {
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return singleImageView
+        singleImageView
     }
 }
