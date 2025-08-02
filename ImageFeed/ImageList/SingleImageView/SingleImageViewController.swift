@@ -1,6 +1,9 @@
+import Kingfisher
+import ProgressHUD
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    private var photos: [ImageListService.Photo] = []
     private var scrollView = UIScrollView()
     private var singleImageView = UIImageView()
     private var backButton = UIButton(type: .system)
@@ -22,20 +25,55 @@ final class SingleImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        super.viewDidLoad()
         setupView()
         setupScroll()
-        if let image = image, singleImageView.image == nil {
-            singleImageView.image = image
-            imageWidth.constant = image.size.width
-            imageHeight.constant = image.size.height
-            rescaleAndCenterImageInScrollView(image: image)
+
+        if let image = image {
+            updateImage(with: image)
+        }
+    }
+
+    func setImage(with photo: ImageListService.Photo, indexPath: IndexPath) {
+        ProgressHUD.animate()
+        guard let url = URL(string: photo.fullImageURL) else {
+            print("Неправильный URL")
+            ProgressHUD.dismiss()
+            return
+        }
+
+        singleImageView.kf.setImage(
+            with: url,
+            placeholder: UIImage(resource: ._1)
+        ) { [weak self] result in
+            ProgressHUD.dismiss()
+            guard let self else { return }
+
+            switch result {
+            case let .success(imageResult):
+                print("[KF]: SingleImage загружено, устанавливаю")
+                self.image = imageResult.image
+                self.updateImage(with: imageResult.image)
+            case let .failure(error):
+                print("[KF]: Ошибка загрузки SingleImage \(error)")
+                showSingleImageError(url: url)
+                return
+            }
+        }
+    }
+
+    private func updateImage(with image: UIImage) {
+        singleImageView.image = image
+        imageWidth.constant = image.size.width
+        imageHeight.constant = image.size.height
+
+        // Отложенное масштабирование после обновления layout
+        DispatchQueue.main.async {
+            self.rescaleAndCenterImageInScrollView(image: image)
         }
     }
 
     private func setupView() {
         view.backgroundColor = UIColor(resource: .ypBlack)
-
         scrollView.backgroundColor = UIColor(resource: .ypBlack)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
@@ -89,9 +127,9 @@ final class SingleImageViewController: UIViewController {
         imageHeight.isActive = true
     }
 
-    func setupScroll() {
+    private func setupScroll() {
         scrollView.delegate = self
-        scrollView.minimumZoomScale = 0.1
+        scrollView.minimumZoomScale = 0.2
         scrollView.maximumZoomScale = 1.25
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -100,16 +138,25 @@ final class SingleImageViewController: UIViewController {
     // MARK: Buttons actions
 
     @objc func backButtonTap(_ sender: Any) {
+        cancelDownloadTask()
         dismiss(animated: true, completion: nil)
+        ProgressHUD.dismiss()
     }
 
     @objc func shareButtonTap(_ sender: Any) {
         guard let image = singleImageView.image else {
             return
         }
-        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
 
+        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityController, animated: true, completion: nil)
+    }
+
+    private func cancelDownloadTask() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.singleImageView.kf.cancelDownloadTask()
+        }
     }
 
     // MARK: Rescale and center
@@ -120,24 +167,18 @@ final class SingleImageViewController: UIViewController {
         // Размеры экрана и фотки
         let visibleRectSize = scrollView.bounds.size
         let imageSize = image.size
-
         // Минимальный и максимальный масштаб
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
-
         // Вычисляем масштаб
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
         let scale = max(minZoomScale, min(maxZoomScale, max(hScale, vScale)))
-
         // Устанавливаем масштаб
         scrollView.setZoomScale(scale, animated: false)
-
         // Убеждаемся, что layout обновился после изменения масштаба
         scrollView.layoutIfNeeded()
-
         let newContentSize = scrollView.contentSize
-
         let horizontalInset = max(0, (newContentSize.width) / 2)
         let verticalInset = max(0, (newContentSize.height) / 2)
         // Добавляем inset
@@ -153,12 +194,47 @@ final class SingleImageViewController: UIViewController {
         // Устанавливаем центр
         scrollView.contentOffset = CGPoint(x: xOffset, y: yOffset)
     }
+
+    private func showSingleImageError(url: URL) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Попробовать ещё раз?",
+            preferredStyle: .alert
+        )
+        let ok = UIAlertAction(title: "Не надо", style: .default) { _ in
+            alert.dismiss(animated: true)
+            self.dismiss(animated: true)
+        }
+        let retry = UIAlertAction(title: "Повторить", style: .default) { _ in
+            ProgressHUD.animate()
+            self.singleImageView.kf.setImage(
+                with: url,
+                placeholder: UIImage(resource: ._1)
+            ) { [weak self] result in
+                ProgressHUD.dismiss()
+                guard let self else { return }
+
+                switch result {
+                case let .success(imageResult):
+                    print("[KF]: Изображение загружено, устанавливаю")
+                    image = imageResult.image
+                case let .failure(error):
+                    print("[KF]: Ошибка загрузки изображения \(error)")
+                    showSingleImageError(url: url)
+                    return
+                }
+            }
+        }
+        alert.addAction(ok)
+        alert.addAction(retry)
+        present(alert, animated: true)
+    }
 }
 
 // MARK: Extensions
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return singleImageView
+        singleImageView
     }
 }

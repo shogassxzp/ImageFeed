@@ -5,13 +5,6 @@ struct OAuthTokenResponse: Codable {
     let tokenType: String
     let scope: String
     let createdAt: Int
-
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case tokenType = "token_type"
-        case scope
-        case createdAt = "created_at"
-    }
 }
 
 final class OAuth2Service {
@@ -41,7 +34,7 @@ final class OAuth2Service {
         }
 
         var request = URLRequest(url: authTokenUrl)
-        request.httpMethod = "POST"
+        request.httpMethod = HTTPMethod.post
         return request
     }
 
@@ -57,7 +50,7 @@ final class OAuth2Service {
         lastCode = code
 
         guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Не удалось создать запрос")
+            print("[OAuth2Service]: Не удалось создать запрос")
             completion(.failure(NetworkError.invalidRequest))
             return
         }
@@ -68,11 +61,11 @@ final class OAuth2Service {
 
             switch result {
             case let .success(tokenResponse):
-                print("Токен декодирован \(tokenResponse.accessToken)")
+                print("[OAuth2Service]: Токен декодирован \(tokenResponse.accessToken)")
                 OAuth2TokenStorage.shared.token = tokenResponse.accessToken
                 completion(.success(tokenResponse.accessToken))
             case let .failure(error):
-                print("Ошибка получения токена: \(error.localizedDescription)")
+                print("[OAuth2Service]: Ошибка получения токена: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

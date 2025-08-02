@@ -2,20 +2,20 @@ import Kingfisher
 import ProgressHUD
 import UIKit
 
-private var profileImageServiceObserver: NSObjectProtocol?
-
-// Create View`s
-
-private var profilePhoto = UIImageView()
-private var usernameLabel = UILabel()
-private var bioLabel = UILabel()
-private var userTagLabel = UILabel()
-private var logoutButton = UIButton()
-
 final class ProfileViewController: UIViewController {
+    private var profileImageServiceObserver: NSObjectProtocol?
+
+    private let logoutService = ProfileLogoutService.shared
+
+    private var profilePhoto = UIImageView()
+    private var usernameLabel = UILabel()
+    private var bioLabel = UILabel()
+    private var userTagLabel = UILabel()
+    private var logoutButton = UIButton()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        addSubview()
         configView()
         updateProfileData()
 
@@ -29,21 +29,43 @@ final class ProfileViewController: UIViewController {
                 print("get notify")
             }
         updateAvatar()
+    }
 
-        // Disable mask
-        usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-        userTagLabel.translatesAutoresizingMaskIntoConstraints = false
-        bioLabel.translatesAutoresizingMaskIntoConstraints = false
-        profilePhoto.translatesAutoresizingMaskIntoConstraints = false
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+    private func addSubview() {
+        [profilePhoto, usernameLabel, userTagLabel, bioLabel, logoutButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+    }
 
-        // Add subview
-        view.addSubview(profilePhoto)
-        view.addSubview(usernameLabel)
-        view.addSubview(userTagLabel)
-        view.addSubview(bioLabel)
-        view.addSubview(logoutButton)
+    private func configView() {
+        view.backgroundColor = .ypBlack
 
+        profilePhoto.layer.masksToBounds = true
+        profilePhoto.layer.cornerRadius = 35
+        profilePhoto.contentMode = .scaleAspectFill
+        profilePhoto.clipsToBounds = true
+
+        usernameLabel.text = "username"
+        usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        usernameLabel.textColor = .ypWhite
+
+        userTagLabel.text = "@usernametag"
+        userTagLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        userTagLabel.textColor = .ypGray
+
+        bioLabel.text = "bio"
+        bioLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        bioLabel.textColor = .ypWhite
+
+        profilePhoto.contentMode = .scaleToFill
+        profilePhoto.tintColor = .gray
+        profilePhoto.kf.indicatorType = .activity
+
+        logoutButton.setImage(UIImage(resource: .logout), for: .normal)
+        logoutButton.tintColor = .ypRed
+        logoutButton.contentHorizontalAlignment = .right
+        logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
         // Set constraint
         NSLayoutConstraint.activate([
             profilePhoto.widthAnchor.constraint(equalToConstant: 70),
@@ -67,46 +89,15 @@ final class ProfileViewController: UIViewController {
         ])
     }
 
-    private func configView() {
-        view.backgroundColor = .ypBlack
-
-        profilePhoto.layer.masksToBounds = true
-        profilePhoto.layer.cornerRadius = 35
-        usernameLabel = UILabel()
-        bioLabel = UILabel()
-        userTagLabel = UILabel()
-        logoutButton = UIButton(type: .system)
-
-        usernameLabel.text = "username"
-        usernameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        usernameLabel.textColor = .ypWhite
-
-        userTagLabel.text = "@usernametag"
-        userTagLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        userTagLabel.textColor = .ypGray
-
-        bioLabel.text = "bio"
-        bioLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        bioLabel.textColor = .ypWhite
-
-        profilePhoto.contentMode = .scaleToFill
-        profilePhoto.tintColor = .gray
-        profilePhoto.kf.indicatorType = .activity
-
-        logoutButton.setImage(UIImage(resource: .logout), for: .normal)
-        logoutButton.tintColor = .ypRed
-        logoutButton.contentHorizontalAlignment = .right
-    }
-
     private func updateProfileData() {
         guard let profile = ProfileService.shared.profileData.self else {
             print("Данные профиля отсутсвуют")
             return
         }
         DispatchQueue.main.async {
-            usernameLabel.text = profile.name
-            userTagLabel.text = profile.loginName
-            bioLabel.text = profile.bio ?? "No Bio avalible"
+            self.usernameLabel.text = profile.name
+            self.userTagLabel.text = profile.loginName
+            self.bioLabel.text = profile.bio ?? "No Bio avalible"
         }
     }
 
@@ -119,5 +110,9 @@ final class ProfileViewController: UIViewController {
         profilePhoto.kf.setImage(with: url,
                                  placeholder: UIImage(resource: .photo),
                                  options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))])
+    }
+
+    @objc private func logout() {
+        logoutService.logout()
     }
 }

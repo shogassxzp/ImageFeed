@@ -12,13 +12,6 @@ final class ProfileService {
         let firstName: String?
         let lastName: String?
         let bio: String?
-
-        enum CodingKeys: String, CodingKey {
-            case username
-            case firstName = "first_name"
-            case lastName = "last_name"
-            case bio
-        }
     }
 
     struct Profile {
@@ -44,7 +37,7 @@ final class ProfileService {
         }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get
         return request
     }
 
@@ -54,7 +47,7 @@ final class ProfileService {
         guard let request = makeProfileRequest(token: token) else {
             DispatchQueue.main.async {
                 let error = URLError(.badURL)
-                print("Неверный URL")
+                print("[ProfileService]: Неверный URL")
                 completion(.failure(error))
             }
             return
@@ -69,7 +62,7 @@ final class ProfileService {
                 self.profileData = profile
                 completion(.success(profile))
             case let .failure(error):
-                print("Ошибка получения профиля \(error.localizedDescription)")
+                print("[ProfileService]: Ошибка получения профиля \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

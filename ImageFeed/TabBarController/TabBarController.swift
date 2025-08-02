@@ -1,6 +1,5 @@
 import UIKit
 
-
 final class TabBarController: UITabBarController {
     private let imageListViewController = ImageListViewController()
     private let profileViewController = ProfileViewController()

@@ -5,12 +5,10 @@ protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
 }
 
-
-
 final class AuthViewController: UIViewController, WebViewViewControllerDelegate {
     private let logoImageView = UIImageView()
     private let loginButton = UIButton(type: .system)
-    
+
     weak var delegate: AuthViewControllerDelegate?
 
     override func viewDidLoad() {
@@ -62,27 +60,24 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
     }
 
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        print("Получен код в AuthViewController: \(code)")
-        UIBlockingProgressHUD.show()
+        print("[AuthViewController]: Получен код в AuthViewController: \(code)")
         OAuth2Service.shared.fetchOAuthToken(code: code) { [weak self] result in
-            UIBlockingProgressHUD.dismiss()
             guard let self else { return }
             switch result {
             case let .success(token):
                 OAuth2TokenStorage.shared.token = token
-
-                print("Токен получен: \(token), вызываем делегата")
+                print("[AuthViewController]: Токен получен: \(token), вызываем делегата")
                 if self.delegate != nil {
-                    print("Делегат Auth существует, вызываем didAuthenticate")
+                    print("[AuthViewController]: Делегат Auth существует, вызываем didAuthenticate")
                     self.delegate?.didAuthenticate(self)
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    print("Делегат Auth не установлен!")
+                    print("[AuthViewController]: Делегат Auth не установлен!")
                     self.navigationController?.popViewController(animated: true)
                 }
             case let .failure(error):
                 AlertPresenter.showErrorAlert(on: self)
-                print("Ошибка: \(error.localizedDescription)")
+                print("[AuthViewController]: Ошибка \(error.localizedDescription)")
             }
         }
     }
