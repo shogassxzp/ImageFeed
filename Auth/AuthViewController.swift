@@ -55,7 +55,8 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     @objc private func showWebView(_ sender: Any) {
         let webViewViewController = WebViewViewController()
-        let webViewPresenter = WebViewPresenter()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
         webViewViewController.presenter = webViewPresenter
         webViewPresenter.view = webViewViewController
         webViewViewController.delegate = self

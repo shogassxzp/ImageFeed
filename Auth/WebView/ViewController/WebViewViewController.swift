@@ -24,8 +24,7 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        OAuthWebView.navigationDelegate = self
-        
+
         estimatedProgressObservation = OAuthWebView.observe(
             \.estimatedProgress,
             options: [],
@@ -33,7 +32,7 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
                 guard let self = self else { return }
                 presenter?.didUpdateProgressValue(OAuthWebView.estimatedProgress)
             })
-        
+
         setUpView()
         presenter?.viewDidLoad()
     }
@@ -92,7 +91,6 @@ extension WebViewViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-
     private func code(from navigationAction: WKNavigationAction) -> String? {
         if let url = navigationAction.request.url {
             return presenter?.code(from: url)
