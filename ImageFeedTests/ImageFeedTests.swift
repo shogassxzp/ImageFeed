@@ -61,6 +61,17 @@ final class ImageFeedTests: XCTestCase {
         XCTAssertTrue(urlString.contains(configuration.redirectURI))
         XCTAssertTrue(urlString.contains("code"))
     }
+    
+    func testCodeFromURL() {
+        var urlComponents = URLComponents(string:"https://unsplash.com/oauth/authorize/native")
+        urlComponents?.queryItems = [URLQueryItem(name: "code", value: "test code")]
+        let url = (urlComponents?.url!)!
+        let authHelper = AuthHelper()
+        
+        let code = authHelper.code(from: url)
+        
+        XCTAssertEqual(code, "test code")
+    }
 }
 
 final class WebViewControllerSpy: WebViewViewControllerProtocol {
