@@ -2,10 +2,15 @@ import Kingfisher
 import ProgressHUD
 import UIKit
 
-final class ProfileViewController: UIViewController {
-    private var profileImageServiceObserver: NSObjectProtocol?
+protocol ProfileViewProtocol {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateProfileData(username: String?, loginName: String?, bio: String?)
+    func updateAvatar(url: URL?)
+}
 
-    private let logoutService = ProfileLogoutService.shared
+final class ProfileViewController: UIViewController & ProfileViewProtocol {
+    var presenter: ProfilePresenterProtocol?
+    private var profileImageServiceObserver: NSObjectProtocol?
 
     private var profilePhoto = UIImageView()
     private var usernameLabel = UILabel()
@@ -15,20 +20,11 @@ final class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = ProfilePresenter(view: self)
         addSubview()
-        configView()
-        updateProfileData()
-
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(forName: ProfileImageService.didChangeNotification,
-                         object: nil,
-                         queue: .main,) {
-                [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-                print("get notify")
-            }
-        updateAvatar()
+        setupView()
+        setupObserver()
+        presenter?.viewDidLoad()
     }
 
     private func addSubview() {
@@ -38,7 +34,7 @@ final class ProfileViewController: UIViewController {
         }
     }
 
-    private func configView() {
+    private func setupView() {
         view.backgroundColor = .ypBlack
 
         profilePhoto.layer.masksToBounds = true
@@ -89,30 +85,43 @@ final class ProfileViewController: UIViewController {
         ])
     }
 
-    private func updateProfileData() {
-        guard let profile = ProfileService.shared.profileData.self else {
-            print("Данные профиля отсутсвуют")
+    func setupObserver() {
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(forName: ProfileImageService.didChangeNotification,
+                         object: nil,
+                         queue: .main,) {
+                [weak self] _ in
+                guard let self = self else { return }
+                presenter?.didUpdateAvatar()
+                print("get notify")
+            }
+    }
+
+    func updateProfileData(username: String?, loginName: String?, bio: String?) {
+        DispatchQueue.main.async {
+            self.usernameLabel.text = username ?? "Unknown"
+            self.userTagLabel.text = loginName ?? "@unknown"
+            self.bioLabel.text = bio ?? "No bio availiable"
+        }
+    }
+
+    func updateAvatar(url: URL?) {
+        guard let url else {
+            profilePhoto.image = UIImage(resource: .photo)
             return
         }
-        DispatchQueue.main.async {
-            self.usernameLabel.text = profile.name
-            self.userTagLabel.text = profile.loginName
-            self.bioLabel.text = profile.bio ?? "No Bio avalible"
-        }
+        profilePhoto.kf.setImage(
+            with: url,
+            placeholder: UIImage(resource: .photo),
+            options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))]
+        )
     }
 
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        print("Загружаю и устанавливаю изображение пользователя")
-        profilePhoto.kf.setImage(with: url,
-                                 placeholder: UIImage(resource: .photo),
-                                 options: [.processor(RoundCornerImageProcessor(cornerRadius: 25))])
+    @objc internal func logout() {
+        presenter?.logout()
     }
 
-    @objc private func logout() {
-        logoutService.logout()
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
