@@ -1,32 +1,37 @@
 import UIKit
 
+protocol ImageListViewProtocol: AnyObject {
+    var presenter: ImageListPresenterProtocol? { get set }
+    func updatePhotos(_ photos: [ImageListService.Photo]) 
+    func showLoading()
+    func hideLoading()
+    func presentDetailViewController(for photo: ImageListService.Photo, at indexPath: IndexPath)
+}
+
 // MARK: Controller
 
-final class ImageListViewController: UIViewController {
+import UIKit
+
+final class ImageListViewController: UIViewController & ImageListViewProtocol {
+    var presenter: ImageListPresenterProtocol?
     private let tableView = UITableView()
-    private let listService = ImageListService.shared
     private var photos: [ImageListService.Photo] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = ImageListPresenter(view: self)
         setupTableView()
-        NotificationCenter.default.addObserver(
-            forName: ImageListService.didChangeNotification,
-            object: nil,
-            queue: .main)
-        { [self] _ in updateTableViewAnimated() }
-        listService.fetchPhotosNextPage()
+        presenter?.viewDidLoad()
     }
 
     private func setupTableView() {
-        view.backgroundColor = UIColor(resource: .ypBlack)
+        view.backgroundColor = .ypBlack
         view.addSubview(tableView)
 
-        tableView.backgroundColor = UIColor(resource: .ypBlack)
+        tableView.backgroundColor = .ypBlack
         tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
-
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.reuseIdentifier)
-        tableView.separatorColor = UIColor(resource: .ypBlack)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
@@ -39,21 +44,37 @@ final class ImageListViewController: UIViewController {
         ])
     }
 
-    func updateTableViewAnimated() {
-        let oldCount = photos.count
-        photos = listService.photos
-        let newCount = photos.count
+    func updatePhotos(_ photos: [ImageListService.Photo]) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let oldCount = self.photos.count
+            self.photos = photos
+            let newCount = self.photos.count
 
-        guard oldCount != newCount else { return }
-
-        let indexPaths = (oldCount ..< newCount).map { IndexPath(row: $0, section: 0) }
-        tableView.performBatchUpdates {
-            tableView.insertRows(at: indexPaths, with: .automatic)
+            let indexPaths = (oldCount ..< newCount).map { IndexPath(row: $0, section: 0) }
+            self.tableView.performBatchUpdates {
+                self.tableView.insertRows(at: indexPaths, with: .automatic)
+                print("[ImageListViewController]: Добавлено \(newCount - oldCount) новых строк")
+            }
         }
     }
-}
 
-// MARK: Extensions
+    func showLoading() {
+        UIBlockingProgressHUD.show()
+    }
+
+    func hideLoading() {
+        UIBlockingProgressHUD.dismiss()
+    }
+
+    func presentDetailViewController(for photo: ImageListService.Photo, at indexPath: IndexPath) {
+        let singleImageViewController = SingleImageViewController()
+        singleImageViewController.setImage(with: photo, indexPath: indexPath)
+        singleImageViewController.modalPresentationStyle = .fullScreen
+        present(singleImageViewController, animated: true)
+        print("[ImageListViewController]: Показан SingleImageViewController для фото: \(photo.id)")
+    }
+}
 
 extension ImageListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -74,17 +95,11 @@ extension ImageListViewController: UITableViewDataSource {
 extension ImageListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let photo = photos[indexPath.row]
-        let singleImageViewController = SingleImageViewController()
-        singleImageViewController.setImage(with: photo, indexPath: indexPath)
-        singleImageViewController.modalPresentationStyle = .fullScreen
-        present(singleImageViewController, animated: true, completion: nil)
+        presenter?.didSelectPhoto(at: indexPath)
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == photos.count {
-            listService.fetchPhotosNextPage()
-        }
+        presenter?.willDisplayCell(at: indexPath)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -102,24 +117,13 @@ extension ImageListViewController: UITableViewDelegate {
 
 extension ImageListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        let photo = photos[indexPath.row]
-
-        UIBlockingProgressHUD.show()
-        listService.changeLike(photoId: photo.id, isLike: !photo.isLike) { result in
-            switch result {
-            case .success:
-                UIBlockingProgressHUD.dismiss()
-                self.photos = self.listService.photos
-
-                if let cell = self.tableView.cellForRow(at: indexPath) as? ImagesListCell {
-                    cell.setLikeButtonState(isLiked: self.photos[indexPath.row].isLike)
-                }
-            case .failure:
-                UIBlockingProgressHUD.dismiss()
-                cell.setLikeButtonState(isLiked: photo.isLike)
-                // TODO: Сделать алёрт с ошибкой
-            }
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            print("[ImageListViewController]: Не удалось получить indexPath для ячейки")
+            return
         }
+        presenter?.didTapLike(at: indexPath) { isLiked in
+            cell.setLikeButtonState(isLiked: isLiked)
+        }
+        print("[ImageListViewController]: Нажат лайк на indexPath: \(indexPath)")
     }
 }
