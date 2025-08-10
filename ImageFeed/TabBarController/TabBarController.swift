@@ -1,15 +1,20 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
+    
     private let imageListViewController = ImageListViewController()
     private let profileViewController = ProfileViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBar()
+
     }
 
     private func setupBar() {
+        let profilePresenter = ProfilePresenter(view: profileViewController)
+        profileViewController.presenter = profilePresenter
+        
         imageListViewController.tabBarItem = UITabBarItem(
             title: "",
             image: UIImage(resource: .mainActive),

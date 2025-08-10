@@ -2,7 +2,7 @@ import Kingfisher
 import ProgressHUD
 import UIKit
 
-protocol ProfileViewProtocol {
+protocol ProfileViewProtocol: AnyObject {
     var presenter: ProfilePresenterProtocol? { get set }
     func updateProfileData(username: String?, loginName: String?, bio: String?)
     func updateAvatar(url: URL?)
@@ -20,7 +20,7 @@ final class ProfileViewController: UIViewController & ProfileViewProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter = ProfilePresenter(view: self)
+            //presenter = ProfilePresenter(view: self)
         addSubview()
         setupView()
         setupObserver()
