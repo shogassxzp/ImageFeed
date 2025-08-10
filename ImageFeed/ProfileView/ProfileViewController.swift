@@ -62,6 +62,7 @@ final class ProfileViewController: UIViewController & ProfileViewProtocol {
         logoutButton.tintColor = .ypRed
         logoutButton.contentHorizontalAlignment = .right
         logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        logoutButton.accessibilityIdentifier = "logout button"
         // Set constraint
         NSLayoutConstraint.activate([
             profilePhoto.widthAnchor.constraint(equalToConstant: 70),

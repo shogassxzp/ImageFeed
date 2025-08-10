@@ -88,6 +88,7 @@ final class SingleImageViewController: UIViewController {
         backButton.contentHorizontalAlignment = .left
         backButton.addTarget(self, action: #selector(backButtonTap), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.accessibilityIdentifier = "single image back"
         view.addSubview(backButton)
 
         shareButton.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)

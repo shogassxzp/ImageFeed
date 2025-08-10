@@ -51,6 +51,7 @@ final class ImagesListCell: UITableViewCell {
         tableLikeButton.setImage(UIImage(resource: .noActive), for: .normal)
         tableLikeButton.tintColor = .ypWhite
         tableLikeButton.addTarget(self, action: #selector(likeButtonClicked), for: .touchUpInside)
+        tableLikeButton.accessibilityIdentifier = "likeButton"
         //
         contentView.sendSubviewToBack(tableImageView)
 
