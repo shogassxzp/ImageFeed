@@ -40,6 +40,7 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
     private func setUpView() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         OAuthWebView.navigationDelegate = self
+        OAuthWebView.accessibilityIdentifier = "Unsplash"
         progressView.progressTintColor = UIColor(resource: .ypBlack)
 
         progressView.translatesAutoresizingMaskIntoConstraints = false

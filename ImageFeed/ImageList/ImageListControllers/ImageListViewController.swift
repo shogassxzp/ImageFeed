@@ -2,7 +2,7 @@ import UIKit
 
 protocol ImageListViewProtocol: AnyObject {
     var presenter: ImageListPresenterProtocol? { get set }
-    func updatePhotos(_ photos: [ImageListService.Photo]) 
+    func updatePhotos(_ photos: [ImageListService.Photo])
     func showLoading()
     func hideLoading()
     func presentDetailViewController(for photo: ImageListService.Photo, at indexPath: IndexPath)
@@ -54,7 +54,6 @@ final class ImageListViewController: UIViewController & ImageListViewProtocol {
             let indexPaths = (oldCount ..< newCount).map { IndexPath(row: $0, section: 0) }
             self.tableView.performBatchUpdates {
                 self.tableView.insertRows(at: indexPaths, with: .automatic)
-                print("[ImageListViewController]: Добавлено \(newCount - oldCount) новых строк")
             }
         }
     }

@@ -27,6 +27,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         loginButton.addTarget(self, action: #selector(showWebView(_:)), for: .touchUpInside)
         loginButton.layer.masksToBounds = true
         loginButton.layer.cornerRadius = 16
+        loginButton.accessibilityIdentifier = "Login"
 
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         loginButton.translatesAutoresizingMaskIntoConstraints = false
