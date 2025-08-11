@@ -3,7 +3,7 @@ import Foundation
 protocol ProfilePresenterProtocol {
     var view: ProfileViewProtocol? { get set }
     func viewDidLoad()
-    func updateProfileInfo()
+    func updateProfileData()
     func updateAvatar()
     func didUpdateAvatar()
     func logout()
@@ -22,11 +22,11 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
 
     func viewDidLoad() {
-        updateProfileInfo()
+        updateProfileData()
         updateAvatar()
     }
 
-    func updateProfileInfo() {
+    func updateProfileData() {
         guard let profile = profileService.profileData else {
             print("Данные профиля отсутсвуют")
             return

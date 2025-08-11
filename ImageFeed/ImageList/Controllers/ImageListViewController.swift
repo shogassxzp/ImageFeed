@@ -14,7 +14,7 @@ import UIKit
 
 final class ImageListViewController: UIViewController & ImageListViewProtocol {
     var presenter: ImageListPresenterProtocol?
-    private let tableView = UITableView()
+     let tableView = UITableView()
     private var photos: [ImageListService.Photo] = []
 
     override func viewDidLoad() {

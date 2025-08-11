@@ -12,15 +12,14 @@ final class ProfileViewController: UIViewController & ProfileViewProtocol {
     var presenter: ProfilePresenterProtocol?
     private var profileImageServiceObserver: NSObjectProtocol?
 
-    private var profilePhoto = UIImageView()
-    private var usernameLabel = UILabel()
-    private var bioLabel = UILabel()
-    private var userTagLabel = UILabel()
-    private var logoutButton = UIButton()
+    var profilePhoto = UIImageView()
+    var usernameLabel = UILabel()
+    var bioLabel = UILabel()
+    var userTagLabel = UILabel()
+    var logoutButton = UIButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-            //presenter = ProfilePresenter(view: self)
         addSubview()
         setupView()
         setupObserver()
