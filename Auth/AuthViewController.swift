@@ -27,6 +27,7 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
         loginButton.addTarget(self, action: #selector(showWebView(_:)), for: .touchUpInside)
         loginButton.layer.masksToBounds = true
         loginButton.layer.cornerRadius = 16
+        loginButton.accessibilityIdentifier = "Login"
 
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         loginButton.translatesAutoresizingMaskIntoConstraints = false
@@ -55,6 +56,10 @@ final class AuthViewController: UIViewController, WebViewViewControllerDelegate 
 
     @objc private func showWebView(_ sender: Any) {
         let webViewViewController = WebViewViewController()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+        webViewViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewViewController
         webViewViewController.delegate = self
         navigationController?.pushViewController(webViewViewController, animated: true)
     }
